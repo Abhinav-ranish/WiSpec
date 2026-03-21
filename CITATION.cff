@@ -1,0 +1,45 @@
+# This CITATION.cff file tells people how to cite WiSpec.
+# GitHub automatically renders this into a "Cite this repository" button.
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-citation-files
+
+cff-version: 1.2.0
+title: "WiSpec: Commodity Dual-Band Wi-Fi Spectroscopy for Material Classification and Structural Reconnaissance"
+message: >-
+  If you use this software or its methods in your research,
+  please cite both the repository and the associated paper.
+type: software
+authors:
+  - given-names: Abhinav
+    family-names: Ranish
+    email: chatgpt@asu.edu
+    affiliation: Arizona State University
+    orcid: "" # Add your ORCID when you have one
+repository-code: "https://github.com/abhinav-ranish/WiSpec"
+url: "https://github.com/abhinav-ranish/WiSpec"
+license: "LicenseRef-WiSpec-Noncommercial"
+version: "0.1.0"
+date-released: "2026-03-21"
+keywords:
+  - wifi-sensing
+  - material-classification
+  - dual-band
+  - channel-state-information
+  - radio-frequency
+  - spectroscopy
+  - reconnaissance
+  - commodity-hardware
+
+# Preferred citation for the repository
+preferred-citation:
+  type: conference-paper
+  title: "WiSpec: Commodity Dual-Band Wi-Fi Spectroscopy for Material Classification and Structural Reconnaissance"
+  authors:
+    - given-names: Abhinav
+      family-names: Ranish
+      email: chatgpt@asu.edu
+      affiliation: Arizona State University
+  # Update these fields when the paper is published:
+  # journal: "Proceedings of ACM SenSys Workshop"
+  year: 2026
+  # doi: "10.1234/abhinav-ranish"
+  # url: "https://doi.org/10.1234/abhinav-ranish"

@@ -16,31 +16,43 @@
 
 \begin{document}
 
-\title{Dual-Band Wi-Fi Differential Attenuation for Commodity Material Classification: An Empirical Study}
+\title{WiSpec: Commodity Dual-Band Wi-Fi Spectroscopy for Material Classification and Structural Reconnaissance}
 
-\author{Abhinav Ranish\\ Arizona State University}
+\author{Abhinav Ranish\\ Arizona State University\\ chatgpt@asu.edu}
 
 \maketitle
 
 \begin{abstract}
-Indoor sensing without cameras offers compelling privacy and deployment advantages, yet existing RF-based approaches remain limited by single-frequency observations and hardware requirements. We empirically investigate dual-band Wi-Fi differential attenuation as a material fingerprinting feature for cameraless sensing. By leveraging the distinct frequency-dependent propagation characteristics of 2.4 GHz and 5 GHz ISM bands available on commodity Wi-Fi hardware, we extract differential attenuation signatures that encode material composition information. We evaluate this approach using standard Wi-Fi adapters (Intel AX201 for RSSI, AX200/AX210 for CSI) in controlled indoor environments across seven common building materials over 200+ measurements per material. Preliminary results demonstrate that dual-band differential features improve material classification accuracy over single-band baselines by \textit{[PLACEHOLDER: X\%]}, achieving \textit{[PLACEHOLDER: Y\%]} accuracy on the commodity hardware testbed. This work contributes an empirically grounded analysis of multi-band RF sensing feasibility within commodity platforms, advancing the state of low-cost, privacy-preserving indoor localization and material sensing.
+Wi-Fi routers are ubiquitous in buildings, yet their signals remain an underexploited source for passive structural reconnaissance. We investigate how commodity Wi-Fi receivers can infer building material composition and internal structure from differential signal attenuation across 2.4 GHz and 5 GHz bands, without deploying any equipment inside the target building. This capability has immediate relevance for tactical teams, first responders, search and rescue, and structural assessment applications. By leveraging the distinct frequency-dependent propagation characteristics of ISM bands available on commodity Wi-Fi hardware, we extract differential attenuation signatures that encode material composition. We evaluate this proof-of-concept approach using standard Wi-Fi adapters (Intel AX201 for RSSI, AX200/AX210 for CSI) in controlled indoor environments across seven common building materials over 200+ measurements per material. Preliminary results demonstrate that dual-band differential features improve material classification accuracy over single-band baselines by \textit{[PLACEHOLDER: X\%]}, achieving \textit{[PLACEHOLDER: Y\%]} accuracy on the commodity hardware testbed. This work contributes an empirically grounded analysis of passive, through-wall structural sensing feasibility and motivates further investigation into Wi-Fi-based reconnaissance applications.
 \end{abstract}
 
 \begin{IEEEkeywords}
-Wi-Fi sensing, material classification, dual-band RF, commodity hardware, RSSI, CSI
+Wi-Fi sensing, material classification, dual-band RF, commodity hardware, RSSI, CSI, reconnaissance, structural sensing, through-wall, passive sensing
 \end{IEEEkeywords}
 
 \section{Introduction}
 
-Privacy-preserving indoor sensing is a critical challenge for smart home and building automation applications. Video-based approaches, despite their richness, raise privacy concerns and incur significant computational overhead. Radio frequency (RF) sensing offers an appealing alternative: Wi-Fi signals are ubiquitous in modern buildings, and 802.11 hardware—from commodity routers to smartphones—can be repurposed for sensing without explicit infrastructure deployment.
+\subsection{Motivation}
 
-Recent standardization efforts, particularly IEEE 802.11bf (sensing) \cite{802-11bf-standard-2025}, have legitimized Wi-Fi sensing as a first-class use case, yet practical material identification and localization remain challenging on commodity hardware. Most prior work exploits single-frequency measurements (typically 5 GHz) or specialized testbeds. We investigate whether dual-band differential attenuation—a simple yet physically motivated feature—can improve material classification accuracy within realistic hardware and deployment constraints.
+Modern buildings are equipped with Wi-Fi routers as standard infrastructure. Security teams, first responders, and tactical personnel approaching an unfamiliar building currently face a fundamental information gap: \textit{What is this building made of? How is it internally structured? Where are rooms, walls, and openings?} This information is critical for mission planning, hostage rescue, counter-terrorism operations, search and rescue, and disaster response. Obtaining it traditionally requires cameras, drones, or human reconnaissance—all of which are time-consuming, risky, or legally restricted.
 
-\textbf{Contributions:}
+We propose that Wi-Fi routers already present in target buildings create an opportunity for \textit{passive structural reconnaissance}. A tactical team or first responder can position commodity Wi-Fi receivers outside or at the perimeter of a building and intercept signals from the building's own routers. By analyzing how these signals attenuate differently at 2.4 GHz versus 5 GHz as they pass through walls and structural elements, one can infer wall composition (concrete vs. drywall vs. glass), identify interior walls, map room layouts, and detect anomalies—all without deploying any equipment inside the building or alerting occupants.
+
+\subsection{Background and Prior Work Context}
+
+Privacy-preserving indoor sensing is also a critical challenge for smart home and building automation applications. Video-based approaches, despite their richness, raise privacy concerns and incur significant computational overhead. Radio frequency (RF) sensing offers an appealing alternative: Wi-Fi signals are ubiquitous in modern buildings, and 802.11 hardware can be repurposed for sensing. Recent standardization efforts, particularly IEEE 802.11bf (sensing) \cite{802-11bf-standard-2025}, have legitimized Wi-Fi sensing as a first-class use case, yet practical material identification remains challenging on commodity hardware.
+
+\subsection{This Work}
+
+We investigate dual-band differential attenuation—the frequency-dependent difference in path loss between 2.4 GHz and 5 GHz—as a simple yet physically grounded feature for material classification. This is a proof-of-concept study demonstrating the technical feasibility of passive material sensing via commodity Wi-Fi. We acknowledge that end-to-end tactical reconnaissance systems require substantial additional work (e.g., antenna arrays for localization, multipath mitigation, real-world environment validation), but we believe material classification via dual-band sensing is a valuable foundational capability.
+
+\subsection{Contributions}
+
 \begin{itemize}
-    \item An empirical characterization of frequency-dependent attenuation across common building materials at 2.4 GHz and 5 GHz, demonstrating material-specific differential signatures.
-    \item A practical material classification pipeline using dual-band RSSI and CSI features extracted from commodity Wi-Fi adapters, with end-to-end performance evaluation.
+    \item An empirical characterization of frequency-dependent attenuation across common building materials at 2.4 GHz and 5 GHz, demonstrating material-specific differential signatures suitable for classification.
+    \item A practical material classification pipeline using dual-band RSSI and CSI features extracted from commodity Wi-Fi adapters (Intel AX200/AX210), with end-to-end performance evaluation.
     \item Quantitative evidence (via ablation study) that dual-band differential features yield statistically significant improvements over single-band baselines on real hardware.
+    \item Discussion of applications in tactical reconnaissance, search and rescue, smart buildings, and acknowledgment of dual-use (surveillance) risks.
 \end{itemize}
 
 \section{Related Work}
@@ -196,7 +208,32 @@ The ablation quantifies the contribution of each band and modality. [PLACEHOLDER
 
 We empirically demonstrate that dual-band Wi-Fi differential attenuation is a viable material fingerprinting feature for commodity hardware. By exploiting the frequency-dependent propagation characteristics of 2.4 GHz and 5 GHz ISM bands, we achieve [PLACEHOLDER: X\%] classification accuracy on a 7-way material recognition task using standard Wi-Fi adapters, with dual-band features providing statistically significant gains over single-band baselines.
 
-This work grounds material sensing in realistic hardware constraints and contributes an honest empirical assessment of multi-band RF sensing feasibility. Future directions include: (1) extension to emerging 6 GHz ISM band (available in 802.11ax devices), enabling three-band differential features; (2) spatial reconstruction combining multi-band sensing with array processing for cameraless room mapping; and (3) deployment in semi-controlled environments to validate generalization and robustness.
+This work grounds passive structural sensing in realistic hardware constraints and contributes an honest empirical assessment of multi-band RF sensing feasibility for reconnaissance applications. Future directions include: (1) extension to emerging 6 GHz ISM band (available in 802.11ax devices), enabling three-band differential features; (2) spatial reconstruction combining multi-band sensing with antenna arrays for cameraless room mapping and interior structure inference; (3) deployment in realistic building environments to validate generalization and robustness; and (4) investigation of multipath exploitation for finer-grained structural detail.
+
+\section*{Broader Impact and Applications}
+
+The capability to infer building material composition and structure from passive Wi-Fi signals has diverse applications across civilian, tactical, and humanitarian domains:
+
+\subsection*{Tactical and Law Enforcement Reconnaissance}
+Military and law enforcement teams can use this technique for pre-entry reconnaissance, inferring wall composition, interior barriers, and potential concealed rooms or compartments before engaging in high-risk building entry operations. This information directly supports mission planning and officer safety.
+
+\subsection*{Search and Rescue}
+First responders in search and rescue operations can assess building structural integrity and layout (walls, rooms, potential collapse zones) before entry, improving operational safety and reducing deployment time.
+
+\subsection*{Hostage and Crisis Scenarios}
+In hostage situations or barricade scenarios where deploying cameras or drones is infeasible or risky, passive Wi-Fi-based structural sensing can provide critical intelligence on interior layouts without alerting occupants.
+
+\subsection*{Counter-Terrorism and Border Security}
+Detection of hidden compartments, tunnels, or structural anomalies that deviate from expected building design can support counter-terrorism investigations and border security operations.
+
+\subsection*{Disaster Response}
+Following earthquakes, fires, or structural collapse, assessing building composition and damage to walls and structural elements can inform rescue strategies and resource allocation without waiting for manual inspection.
+
+\subsection*{Smart Buildings (Civilian)}
+On the civilian side, automated building monitoring systems can use dual-band Wi-Fi sensing to detect material degradation, moisture ingress, or structural changes over time, supporting predictive maintenance and occupant safety.
+
+\subsection*{Privacy and Surveillance Concerns}
+We acknowledge that this technique is dual-use: the same capability that enables legitimate reconnaissance also creates potential for unauthorized surveillance and privacy violation. Adversaries could passively infer building layouts and occupancy patterns from publicly available Wi-Fi signals. This necessitates policy discussion on when and how such sensing should be permitted, regulatory frameworks for legitimate use, and potential countermeasures (e.g., Wi-Fi signal masking, legal restrictions on passive reconnaissance). Future work should include technical defenses and governance recommendations.
 
 \section*{Acknowledgments}
 

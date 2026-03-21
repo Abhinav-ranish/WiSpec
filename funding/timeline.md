@@ -1,4 +1,4 @@
-# FURI Research Timeline: Dual-Band Wi-Fi Material Classification
+# FURI Research Timeline: WiSpec Material Classification
 
 **Duration:** 14 weeks (Spring 2027 semester, January–April 2027)
 **Expected effort:** 10–12 hours/week

@@ -1,8 +1,8 @@
-# Dual-Band Wi-Fi Differential Attenuation for Low-Cost Material Classification and Indoor Sensing
+# WiSpec: Commodity Dual-Band Wi-Fi Spectroscopy for Material Classification
 
 ## 1. Research Question
 
-Can commodity dual-band Wi-Fi hardware classify common building materials using frequency-differential attenuation features, and does dual-band sensing significantly outperform single-band approaches?
+Can commodity dual-band Wi-Fi hardware classify common building materials using frequency-differential attenuation features, and does dual-band sensing significantly outperform single-band approaches? How can WiSpec be applied to tactical reconnaissance and emergency response scenarios?
 
 ## 2. Background and Motivation
 
@@ -11,6 +11,9 @@ Wi-Fi sensing—extracting environmental information from wireless signals—has
 
 ### Privacy and Accessibility
 Unlike camera-based indoor sensing, Wi-Fi sensing is privacy-preserving (no video data), ubiquitous (Wi-Fi is already deployed everywhere), and low-cost (no additional sensors required). These properties make it ideal for smart building applications, structural health monitoring, and emergency response (e.g., search and rescue through walls).
+
+### Tactical and Reconnaissance Applications
+Beyond civilian infrastructure, material classification through radio frequency sensing has compelling applications in tactical scenarios. Military personnel conducting building entry operations could use WiSpec to assess wall composition and structural characteristics without direct visual inspection, reducing operational risk. Search-and-rescue teams could rapidly determine building material composition to optimize rescue strategies and identify optimal penetration points. Structural assessment for disaster response—identifying whether walls are load-bearing concrete or lighter drywall—enables first responders to make informed decisions about safe approach routes and extraction strategies. WiSpec provides a non-invasive, equipment-light capability for these high-stakes scenarios.
 
 ### Physical Basis
 Different materials attenuate 2.4 GHz and 5 GHz Wi-Fi signals at markedly different rates due to their dielectric properties. NIST and academic studies (e.g., Rappaport, Parsons) have measured that concrete, wood, drywall, glass, and metal each exhibit characteristic attenuation signatures across the spectrum. A 5 GHz signal attenuates ~2–4× faster than 2.4 GHz when passing through concrete, for example. This differential attenuation is a novel material "fingerprint."

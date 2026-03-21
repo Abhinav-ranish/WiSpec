@@ -1,47 +1,41 @@
-# Personal Statement: Wi-Fi Sensing for Material Classification
+# Personal Statement: WiSpec - Wi-Fi Spectroscopy for Material Classification
 
-[PERSONALIZE: Add your full name and date at the top before submitting]
-
-## My Journey to Wireless Sensing
-
-[PERSONALIZE: Describe a specific moment or project that sparked your interest in wireless systems, RF sensing, or signal processing. Examples: taking a circuits course, building a radio project, watching a talk on Wi-Fi sensing, seeing how Bluetooth proximity worked, etc. 2–3 sentences.]
-
-I became fascinated with the invisible infrastructure that surrounds us daily. [PERSONALIZE: Add personal context about what drew you to the intersection of wireless systems and practical problem-solving. 1–2 sentences.]
-
-## Why This Project
-
-This proposed dual-band Wi-Fi material classification project sits at the intersection of three areas that excite me: **physics** (understanding how radio waves interact with matter), **machine learning** (building systems that learn patterns), and **practical sensing** (creating tools that solve real problems).
-
-Most Wi-Fi sensing research focuses on human activity—tracking gestures or occupancy—but rarely asks: *Can the material composition of an environment be inferred from wireless signals alone?* The physics suggests yes: concrete and wood have different dielectric properties, and thus attenuate 2.4 GHz and 5 GHz at different rates. But nobody has built this and demonstrated it with commodity hardware. That gap is exactly where I want to contribute.
-
-What excites me most is that this is both **feasible** (using off-the-shelf Wi-Fi cards) and **novel** (no prior work uses dual-band differential attenuation this way). I'm also drawn to the privacy angle: unlike cameras, Wi-Fi sensing preserves privacy while enabling smart buildings and structural monitoring. [PERSONALIZE: If applicable, mention any prior coursework in signals, RF, machine learning, or sensing that prepared you. 1–2 sentences.]
-
-## What I Hope to Learn
-
-Beyond the technical skills—signal processing, CSI feature extraction, machine learning pipeline development—I want to develop as a **researcher**. This project will teach me:
-
-- **Experimental methodology:** how to design controlled measurements, avoid confounds, and collect clean data.
-- **Reproducibility and documentation:** preparing datasets and code for others to use and build on.
-- **Academic publishing:** taking raw results and synthesizing them into a conference workshop paper with clear contributions and limitations.
-- **Problem-scoping:** learning when to simplify, what to measure, and how to iterate when results disappoint.
-
-[PERSONALIZE: Add one personal learning goal specific to your background or interests. Example: "I also want to deepen my understanding of antenna design by hands-on experimentation" or "I want to become comfortable with signal processing libraries in Python." 1–2 sentences.]
-
-## Career Vision
-
-I see wireless sensing and IoT as central to the next decade of technology—from smart infrastructure to medical diagnostics to search-and-rescue robotics. I'm committed to pursuing research in this space, likely through a PhD in electrical engineering or computer science, with a focus on wireless systems and privacy-preserving sensing.
-
-This FURI project is a crucial stepping stone: it will give me the research experience, publication record, and technical depth I need for graduate school applications, while contributing to open knowledge in a rapidly evolving field. [PERSONALIZE: If you have specific graduate schools or research groups in mind, mention them briefly. Example: "I'm particularly interested in labs that combine RF sensing with mobile computing, like those at MIT Media Lab or UC Berkeley Wireless Research Group." 1–2 sentences.]
-
-## Closing
-
-I'm eager to tackle this research with the rigor and enthusiasm it deserves. The combination of clear technical goals, achievable scope, and genuine novelty makes this the right project at the right time. I'm ready to contribute to the future of Wi-Fi sensing.
+**Abhinav Ranish**
+Arizona State University
+aranish@asu.edu
 
 ---
 
-**Notes for Abhinav before submitting:**
-- Replace bracketed [PERSONALIZE: ...] sections with your own details.
-- Keep the overall tone honest and enthusiastic, not overstated.
-- If you have relevant coursework (signal processing, machine learning, electromagnetics), mention it in the appropriate section.
-- Proofread for grammar and clarity.
-- Limit to one page (550–650 words is typical).
+## How I Got Here
+
+Last year I came across a research paper on radio frequency sensing—how radio waves can be used to "see" inside a room and detect what's there. The concept fascinated me: invisible signals bouncing around, carrying information about their environment. But I kept thinking: what else can we extract? How much detail can we really pull out if we're paying attention to the fine details?
+
+That's when it clicked. Every decimal point in a signal tells a different story. A 2.4 GHz wave hitting paper at a certain distance will lose a predictable amount of power—call it X attenuation. But at 5 GHz, the same paper might barely affect the signal if you're close enough. The difference between those two outcomes is data. That contrast is information we can actually use.
+
+## Why Dual-Band Wi-Fi Matters
+
+I started thinking about this more systematically. The physics is elegant: concrete, wood, drywall, glass—they all have different properties at the molecular level. Those properties affect how they absorb and reflect radio waves at different frequencies. If 5 GHz attenuates roughly twice as fast as 2.4 GHz through concrete, that ratio is a fingerprint. Nobody has really built this with cheap Wi-Fi hardware and shown it works.
+
+That's the project I want to tackle. Not just asking "can we do it?" but "how far can we push it?" What's the limit of what you can infer about a space from commodity Wi-Fi signals alone? Can we classify materials with high confidence? Can we beat single-band approaches? I want to find out.
+
+## What Draws Me to This Work
+
+There's something elegant about working with constraints. A camera would obviously tell you what's in a room, but a Wi-Fi card? That's clever. It's also privacy-respecting—no video, no images, just signals. And it's practical: Wi-Fi is already everywhere.
+
+The technical side excites me too. This means learning signal processing from first principles, understanding how to extract features from channel state information, and building classifiers that can actually generalize to new materials and environments. It means thinking carefully about experimental design—avoiding confounds, collecting clean data, iterating when things don't work.
+
+## What I Want to Learn
+
+Beyond the technical skills—CSI feature extraction, machine learning pipeline development, signal processing—I want to develop as a researcher. I want to understand experimental methodology: how do you design measurements that actually prove something? What pitfalls do you need to avoid? I want to get comfortable with reproducibility and documentation so others can build on what I do. And I want to see what it takes to turn raw results into a publishable paper—the process of finding the real contribution, not just the interesting numbers.
+
+I'm also hoping to deepen my practical understanding of antenna behavior and RF propagation. There's a difference between knowing the theory and actually building something that works.
+
+## Where This Leads
+
+I see wireless systems and IoT as foundational to where technology is headed—smart buildings, medical sensing, search-and-rescue operations. Security and privacy matter too; the more we can do with signals instead of cameras, the better. I'm thinking about pursuing a PhD in electrical engineering or computer science focused on wireless systems and sensing, probably with an emphasis on security and privacy.
+
+This FURI project is exactly the kind of stepping stone I need. Real research experience. A paper to show for it. Deep technical work on something that hasn't been done before. That combination matters when you're applying to graduate school and trying to figure out if research is actually what you want to do.
+
+## Let's Do This
+
+I'm ready to approach this with the rigor it deserves. There's a clear technical question, an achievable scope, and genuine novelty. I want to contribute something real to how we think about Wi-Fi sensing.

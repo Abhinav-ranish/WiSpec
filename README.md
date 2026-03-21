@@ -1,7 +1,18 @@
-# Dual-Band Wi-Fi Sensing for Material Classification
+# WiSpec — Commodity Dual-Band Wi-Fi Spectroscopy for Material Classification and Structural Reconnaissance
 
 **Author:** Abhinav Ranish — Arizona State University
 **Status:** Active research project
+
+## Open to Collaborators
+
+This is an active research project and we're looking for collaborators — whether you're into wireless systems, signal processing, machine learning, or just curious about RF sensing. If you want to contribute or discuss ideas, reach out: chatgpt@asu.edu
+
+### Tactical Applications
+
+WiSpec enables several practical applications across different domains:
+- **Building Reconnaissance:** Using Wi-Fi reflections to characterize interior layouts, wall composition, and structural elements without visual access
+- **Search and Rescue:** Rapid structural assessment to identify building composition, floor materials, and potential hazards during emergency operations
+- **Smart Building Automation:** Material-aware building systems that adapt HVAC, lighting, and comfort systems based on wall and floor composition
 
 ## Quick Start
 
@@ -113,8 +124,69 @@ sudo apt install iw wireless-tools iputils-ping
 - Proposal is ready in `funding/` — personalize and submit
 - Alternative: approach a faculty mentor directly with the proposal
 
-## Key References
+## Citation and Licensing
+
+### License
+
+WiSpec is **source-available under a noncommercial license**. This is NOT open source (not MIT, not Apache, not GPL). You can read, learn from, and use the code for academic research — but commercial use requires a separate paid license. See [LICENSE.md](LICENSE.md) for the full terms and [COMMERCIAL-LICENSING.md](COMMERCIAL-LICENSING.md) for commercial inquiries.
+
+| Use | Allowed? |
+|-----|----------|
+| Academic research | Yes (with citation) |
+| Personal learning | Yes (with attribution) |
+| Student thesis | Yes (with citation) |
+| Commercial product/service | No — requires paid license |
+| For-profit internal use | No — requires paid license |
+
+### How to Cite
+
+If you use WiSpec in your research, please cite both the repository and the paper.
+
+**Repository:**
+```
+A. Ranish, "WiSpec: Commodity Dual-Band Wi-Fi Spectroscopy for Material
+Classification and Structural Reconnaissance," GitHub, 2026.
+https://github.com/abhinav-ranish/WiSpec
+```
+
+**Paper (update venue/DOI when published):**
+```
+A. Ranish, "WiSpec: Commodity Dual-Band Wi-Fi Spectroscopy for Material
+Classification and Structural Reconnaissance," [Venue TBD], 2026.
+```
+
+**BibTeX:**
+```bibtex
+@software{ranish2026wispec,
+  author       = {Ranish, Abhinav},
+  title        = {{WiSpec}: Commodity Dual-Band Wi-Fi Spectroscopy for
+                  Material Classification and Structural Reconnaissance},
+  year         = {2026},
+  url          = {https://github.com/abhinav-ranish/WiSpec},
+  note         = {Source-available, noncommercial license}
+}
+
+@inproceedings{ranish2026wispec_paper,
+  author    = {Ranish, Abhinav},
+  title     = {{WiSpec}: Commodity Dual-Band Wi-Fi Spectroscopy for
+               Material Classification and Structural Reconnaissance},
+  booktitle = {[Venue TBD]},
+  year      = {2026},
+  note      = {Preprint / under review}
+}
+```
+
+GitHub also renders a "Cite this repository" button from the [CITATION.cff](CITATION.cff) file.
+
+### Attribution Requirements
+
+Academic and research users **must** cite WiSpec in any publication, thesis, report, or presentation that uses this code, methods, or datasets. This is a condition of the license, not just a polite request.
+
+Commercial use of any kind requires prior written permission. Contact: chatgpt@asu.edu
+
+## Key References for WiSpec
+
 See `paper/references.bib` for complete bibliography. Essential reading:
-1. Chen et al., "Wireless Sensing for Material Identification: A Survey," IEEE COMST, 2025
-2. Wang et al., "Towards In-baggage Suspicious Object Detection Using Commodity WiFi," IEEE CNS, 2018
+1. Chen et al., "A Survey on Radio Frequency Sensing: From Wi-Fi to 6G," IEEE COMST, 2025
+2. Wilson & Patwari, "Propagation Losses in Building Materials: Measurements and Prediction at 915 MHz and 2.4 GHz," IEEE AWPL, 2002
 3. Wilson & Patwari, "Radio Tomographic Imaging with Wireless Networks," IEEE TMC, 2010
