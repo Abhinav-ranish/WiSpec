@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WiSpec — Commodity Dual-Band Wi-Fi Spectroscopy</title>
+  <meta name="description" content="WiSpec uses commodity dual-band Wi-Fi hardware to classify building materials through frequency-differential attenuation, achieving 91% accuracy.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600&family=Source+Code+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Scan line overlay -->
+  <div class="scanline-overlay" aria-hidden="true"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">
+        <span class="nav-logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+            <path d="M8 12a4 4 0 018 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+            <path d="M5 12a7 7 0 0114 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+            <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+          </svg>
+        </span>
+        <span class="nav-logo-text">WiSpec</span>
+      </a>
+      <div class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#science">Science</a>
+        <a href="#results">Results</a>
+        <a href="#applications">Applications</a>
+        <a href="#hardware">Hardware</a>
+        <a href="#cite">Cite</a>
+        <a href="https://github.com" class="nav-btn" target="_blank" rel="noopener">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+      </div>
+      <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero" id="hero">
+    <canvas id="heroCanvas" class="hero-canvas"></canvas>
+    <div class="hero-grid-bg" aria-hidden="true"></div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="hero-badge-dot"></span>
+        Arizona State University Research
+      </div>
+      <h1 class="hero-title">
+        <span class="hero-title-line">Wi</span><span class="hero-title-accent">Spec</span>
+      </h1>
+      <p class="hero-subtitle">Commodity Dual-Band Wi-Fi Spectroscopy<br>for Material Classification</p>
+      <p class="hero-desc">
+        Classify building materials using off-the-shelf Wi-Fi hardware.
+        Dual-band frequency-differential attenuation achieves <strong>91% accuracy</strong> &mdash;
+        a 16% improvement over single-band approaches.
+      </p>
+      <div class="hero-actions">
+        <a href="#science" class="btn btn-primary">
+          <span>Explore the Science</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 3v10M3 8l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#cite" class="btn btn-ghost">
+          <span>Cite This Work</span>
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat-value" data-count="91">0</span><span class="hero-stat-unit">%</span>
+          <span class="hero-stat-label">Classification Accuracy</span>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-value" data-count="6">0</span>
+          <span class="hero-stat-label">Material Classes</span>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <span class="hero-stat-value">&lt;$</span><span class="hero-stat-value" data-count="200">0</span>
+          <span class="hero-stat-label">Hardware Cost</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll-indicator" aria-hidden="true">
+      <div class="hero-scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- Overview -->
+  <section class="section" id="overview">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">01 / Overview</span>
+        <h2 class="section-title">See Through Walls<br>With Wi-Fi</h2>
+        <p class="section-desc">
+          Different building materials attenuate 2.4 GHz and 5 GHz signals at distinctly different rates.
+          WiSpec exploits this physical phenomenon to create unique material fingerprints using nothing
+          more than commodity Wi-Fi hardware.
+        </p>
+      </div>
+
+      <div class="overview-grid">
+        <div class="overview-card reveal" data-delay="0">
+          <div class="overview-card-icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M16 4v24M4 16h24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="1.5" opacity="0.3"/>
+            </svg>
+          </div>
+          <h3>Frequency-Differential</h3>
+          <p>5 GHz attenuates 2&ndash;4&times; faster than 2.4 GHz through concrete. Each material creates a unique dual-band signature.</p>
+        </div>
+        <div class="overview-card reveal" data-delay="100">
+          <div class="overview-card-icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <rect x="4" y="8" width="24" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M12 14l3 4 5-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3>Commodity Hardware</h3>
+          <p>No specialized RF equipment needed. Works with off-the-shelf routers and Wi-Fi cards costing under $200 total.</p>
+        </div>
+        <div class="overview-card reveal" data-delay="200">
+          <div class="overview-card-icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <path d="M6 24L12 8l6 12 4-6 4 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3>Statistically Rigorous</h3>
+          <p>Ablation study with McNemar&rsquo;s test and paired t-tests proves dual-band superiority (p&nbsp;&lt;&nbsp;0.005).</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Science / How It Works -->
+  <section class="section section-dark" id="science">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">02 / The Science</span>
+        <h2 class="section-title">How WiSpec Works</h2>
+      </div>
+
+      <div class="pipeline">
+        <div class="pipeline-step reveal" data-delay="0">
+          <div class="pipeline-number">01</div>
+          <div class="pipeline-visual">
+            <div class="pipeline-wave-container">
+              <canvas class="pipeline-wave" data-freq="2.4" data-color="#00e5ff"></canvas>
+              <canvas class="pipeline-wave" data-freq="5.0" data-color="#39ff14"></canvas>
+            </div>
+          </div>
+          <h3>Dual-Band Transmission</h3>
+          <p>Simultaneously transmit on 2.4 GHz and 5 GHz bands. The router sends beacon frames while the receiver measures signal characteristics on both frequencies.</p>
+        </div>
+
+        <div class="pipeline-connector" aria-hidden="true">
+          <svg width="48" height="24" viewBox="0 0 48 24"><path d="M0 12h48" stroke="var(--cyan)" stroke-width="1" stroke-dasharray="4 4"/><path d="M40 6l8 6-8 6" fill="none" stroke="var(--cyan)" stroke-width="1.5"/></svg>
+        </div>
+
+        <div class="pipeline-step reveal" data-delay="150">
+          <div class="pipeline-number">02</div>
+          <div class="pipeline-visual">
+            <div class="pipeline-delta">
+              <div class="pipeline-delta-bar" data-material="concrete">
+                <span class="pipeline-delta-label">Concrete</span>
+                <div class="pipeline-delta-fill" style="--fill-pct: 85%"></div>
+              </div>
+              <div class="pipeline-delta-bar" data-material="wood">
+                <span class="pipeline-delta-label">Wood</span>
+                <div class="pipeline-delta-fill" style="--fill-pct: 35%"></div>
+              </div>
+              <div class="pipeline-delta-bar" data-material="glass">
+                <span class="pipeline-delta-label">Glass</span>
+                <div class="pipeline-delta-fill" style="--fill-pct: 20%"></div>
+              </div>
+              <div class="pipeline-delta-bar" data-material="metal">
+                <span class="pipeline-delta-label">Metal</span>
+                <div class="pipeline-delta-fill" style="--fill-pct: 95%"></div>
+              </div>
+            </div>
+          </div>
+          <h3>Delta Extraction</h3>
+          <p>Compute <code>&Delta;attenuation = A<sub>5GHz</sub> &minus; A<sub>2.4GHz</sub></code>. Each material produces a characteristic frequency-differential fingerprint based on its dielectric properties.</p>
+        </div>
+
+        <div class="pipeline-connector" aria-hidden="true">
+          <svg width="48" height="24" viewBox="0 0 48 24"><path d="M0 12h48" stroke="var(--cyan)" stroke-width="1" stroke-dasharray="4 4"/><path d="M40 6l8 6-8 6" fill="none" stroke="var(--cyan)" stroke-width="1.5"/></svg>
+        </div>
+
+        <div class="pipeline-step reveal" data-delay="300">
+          <div class="pipeline-number">03</div>
+          <div class="pipeline-visual">
+            <div class="pipeline-classify">
+              <div class="pipeline-classify-node" data-type="rf">RF</div>
+              <div class="pipeline-classify-node" data-type="svm">SVM</div>
+              <div class="pipeline-classify-node" data-type="xgb">XGB</div>
+              <div class="pipeline-classify-result">
+                <span class="pipeline-classify-pct">91%</span>
+              </div>
+            </div>
+          </div>
+          <h3>ML Classification</h3>
+          <p>Feed dual-band features into ensemble classifiers (Random Forest, SVM, XGBoost). Stratified 5-fold cross-validation yields 91% accuracy with statistical significance.</p>
+        </div>
+      </div>
+
+      <!-- Feature Formula -->
+      <div class="formula-block reveal">
+        <div class="formula-header">Core Innovation: Dual-Band Feature Vector</div>
+        <div class="formula">
+          <span class="formula-var">F</span> = [
+          <span class="formula-24g">RSSI<sub>2.4</sub></span>,
+          <span class="formula-5g">RSSI<sub>5</sub></span>,
+          <span class="formula-delta">&Delta;RSSI</span>,
+          <span class="formula-24g">A<sub>2.4</sub></span>,
+          <span class="formula-5g">A<sub>5</sub></span>,
+          <span class="formula-delta">&Delta;A</span>,
+          <span class="formula-delta">A<sub>5</sub>/A<sub>2.4</sub></span>
+          ]
+        </div>
+        <p class="formula-caption">Where <span class="formula-delta">&Delta;A = A<sub>5GHz</sub> &minus; A<sub>2.4GHz</sub></span> is the novel frequency-differential attenuation feature that drives classification accuracy.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Materials -->
+  <section class="section" id="materials">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">03 / Materials</span>
+        <h2 class="section-title">Material Signatures</h2>
+        <p class="section-desc">Each building material attenuates 2.4 GHz and 5 GHz at distinctly different rates, creating a unique electromagnetic fingerprint.</p>
+      </div>
+
+      <div class="materials-grid">
+        <div class="material-card reveal" data-delay="0">
+          <div class="material-header">
+            <div class="material-icon concrete"></div>
+            <h3>Concrete</h3>
+          </div>
+          <div class="material-bars">
+            <div class="material-bar">
+              <span class="material-bar-label">2.4 GHz</span>
+              <div class="material-bar-track"><div class="material-bar-fill bar-24g" style="--w: 55%"></div></div>
+              <span class="material-bar-val">~12 dB</span>
+            </div>
+            <div class="material-bar">
+              <span class="material-bar-label">5 GHz</span>
+              <div class="material-bar-track"><div class="material-bar-fill bar-5g" style="--w: 90%"></div></div>
+              <span class="material-bar-val">~35 dB</span>
+            </div>
+          </div>
+          <div class="material-delta">
+            <span>&Delta; = </span><strong>23 dB</strong>
+            <span class="material-delta-tag high">High differential</span>
+          </div>
+        </div>
+
+        <div class="material-card reveal" data-delay="80">
+          <div class="material-header">
+            <div class="material-icon drywall"></div>
+            <h3>Drywall</h3>
+          </div>
+          <div class="material-bars">
+            <div class="material-bar">
+              <span class="material-bar-label">2.4 GHz</span>
+              <div class="material-bar-track"><div class="material-bar-fill bar-24g" style="--w: 15%"></div></div>
+              <span class="material-bar-val">~3 dB</span>
+            </div>
+            <div class="material-bar">
+              <span class="material-bar-label">5 GHz</span>
+              <div class="material-bar-track"><div class="material-bar-fill bar-5g" style="--w: 25%"></div></div>
+              <span class="material-bar-val">~5 dB</span>
+            </div>
+          </div>
+          <div class="material-delta">
+            <span>&Delta; = </span><strong>2 dB</strong>
+            <span class="material-delta-tag low">Low differential</span>
+          </div>
+        </div>
+
+        <div class="material-card reveal" data-delay="160">
+          <div class="material-header">
+            <div class="material-icon wood"></div>
+            <h3>Wood</h3>
+          </div>
+          <div class="material-bars">
+            <div class="material-bar">
+              <span class="material-bar-label">2.4 GHz</span>
+              <div class="material-bar-track"><div class="material-bar-fill bar-24g" style="--w: 20%"></div></div>
+              <span class="material-bar-val">~5 dB</span>
+            </div>
+            <div class="material-bar">
+              <span class="material-bar-label">5 GHz</span>
+              <div class="material-bar-track"><div class="material-bar-fill bar-5g" style="--w: 40%"></div></div>
+              <span class="material-bar-val">~10 dB</span>
+            </div>
+          </div>
+          <div class="material-delta">
+            <span>&Delta; = </span><strong>5 dB</strong>
+            <span class="material-delta-tag med">Medium differential</span>
+          </div>
+        </div>
+
+        <div class="material-card reveal" data-delay="240">
+          <div class="material-header">
+            <div class="material-icon glass"></div>
+            <h3>Glass</h3>
+          </div>
+          <div class="material-bars">
+            <div class="material-bar">
+              <span class="material-bar-label">2.4 GHz</span>
+              <div class="material-bar-track"><div class="material-bar-fill bar-24g" style="--w: 12%"></div></div>
+              <span class="material-bar-val">~2 dB</span>
+            </div>
+            <div class="material-bar">
+              <span class="material-bar-label">5 GHz</span>
+              <div class="material-bar-track"><div class="material-bar-fill bar-5g" style="--w: 22%"></div></div>
+              <span class="material-bar-val">~4 dB</span>
+            </div>
+          </div>
+          <div class="material-delta">
+            <span>&Delta; = </span><strong>2 dB</strong>
+            <span class="material-delta-tag low">Low differential</span>
+          </div>
+        </div>
+
+        <div class="material-card reveal" data-delay="320">
+          <div class="material-header">
+            <div class="material-icon brick"></div>
+            <h3>Brick</h3>
+          </div>
+          <div class="material-bars">
+            <div class="material-bar">
+              <span class="material-bar-label">2.4 GHz</span>
+              <div class="material-bar-track"><div class="material-bar-fill bar-24g" style="--w: 35%"></div></div>
+              <span class="material-bar-val">~8 dB</span>
+            </div>
+            <div class="material-bar">
+              <span class="material-bar-label">5 GHz</span>
+              <div class="material-bar-track"><div class="material-bar-fill bar-5g" style="--w: 60%"></div></div>
+              <span class="material-bar-val">~18 dB</span>
+            </div>
+          </div>
+          <div class="material-delta">
+            <span>&Delta; = </span><strong>10 dB</strong>
+            <span class="material-delta-tag med">Medium differential</span>
+          </div>
+        </div>
+
+        <div class="material-card reveal" data-delay="400">
+          <div class="material-header">
+            <div class="material-icon metal"></div>
+            <h3>Metal</h3>
+          </div>
+          <div class="material-bars">
+            <div class="material-bar">
+              <span class="material-bar-label">2.4 GHz</span>
+              <div class="material-bar-track"><div class="material-bar-fill bar-24g" style="--w: 85%"></div></div>
+              <span class="material-bar-val">~30 dB</span>
+            </div>
+            <div class="material-bar">
+              <span class="material-bar-label">5 GHz</span>
+              <div class="material-bar-track"><div class="material-bar-fill bar-5g" style="--w: 95%"></div></div>
+              <span class="material-bar-val">~40 dB</span>
+            </div>
+          </div>
+          <div class="material-delta">
+            <span>&Delta; = </span><strong>10 dB</strong>
+            <span class="material-delta-tag high">Near-total block</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Results -->
+  <section class="section section-dark" id="results">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">04 / Results</span>
+        <h2 class="section-title">Ablation Study</h2>
+        <p class="section-desc">Rigorous comparison proving dual-band features significantly outperform single-band approaches.</p>
+      </div>
+
+      <div class="results-layout">
+        <div class="results-chart reveal">
+          <div class="results-chart-inner">
+            <div class="results-bar-group">
+              <div class="results-bar-wrapper">
+                <div class="results-bar results-bar-24g" style="--h: 78%">
+                  <span class="results-bar-value">78.2%</span>
+                </div>
+                <span class="results-bar-label">2.4 GHz<br>Only</span>
+              </div>
+              <div class="results-bar-wrapper">
+                <div class="results-bar results-bar-5g" style="--h: 82%">
+                  <span class="results-bar-value">81.6%</span>
+                </div>
+                <span class="results-bar-label">5 GHz<br>Only</span>
+              </div>
+              <div class="results-bar-wrapper results-bar-winner">
+                <div class="results-bar results-bar-dual" style="--h: 91%">
+                  <span class="results-bar-value">90.9%</span>
+                </div>
+                <span class="results-bar-label">Dual-Band<br>WiSpec</span>
+              </div>
+            </div>
+            <div class="results-chart-baseline"></div>
+          </div>
+        </div>
+
+        <div class="results-stats reveal" data-delay="200">
+          <div class="results-stat-card">
+            <div class="results-stat-header">Improvement</div>
+            <div class="results-stat-big">+12.7<span>pp</span></div>
+            <div class="results-stat-sub">absolute over 2.4 GHz only</div>
+          </div>
+          <div class="results-stat-card">
+            <div class="results-stat-header">McNemar&rsquo;s Test</div>
+            <div class="results-stat-big">p = 0.0012</div>
+            <div class="results-stat-sub">statistically significant (p &lt; 0.05)</div>
+          </div>
+          <div class="results-stat-card">
+            <div class="results-stat-header">Paired t-test</div>
+            <div class="results-stat-big">t = 5.23</div>
+            <div class="results-stat-sub">p = 0.0021, 5-fold CV</div>
+          </div>
+          <div class="results-stat-card">
+            <div class="results-stat-header">Validation</div>
+            <div class="results-stat-big">5-Fold</div>
+            <div class="results-stat-sub">stratified cross-validation</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Classifiers table -->
+      <div class="classifiers-table reveal" data-delay="100">
+        <div class="table-header">Classifier Performance (Dual-Band)</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Classifier</th>
+              <th>Accuracy</th>
+              <th>Precision</th>
+              <th>Recall</th>
+              <th>F1 Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="classifier-badge rf">Random Forest</span></td>
+              <td class="val-highlight">90.9%</td>
+              <td>0.91</td>
+              <td>0.90</td>
+              <td>0.90</td>
+            </tr>
+            <tr>
+              <td><span class="classifier-badge svm">SVM (RBF)</span></td>
+              <td>88.4%</td>
+              <td>0.89</td>
+              <td>0.88</td>
+              <td>0.88</td>
+            </tr>
+            <tr>
+              <td><span class="classifier-badge xgb">XGBoost</span></td>
+              <td class="val-highlight">91.2%</td>
+              <td>0.91</td>
+              <td>0.91</td>
+              <td>0.91</td>
+            </tr>
+            <tr>
+              <td><span class="classifier-badge knn">k-NN</span></td>
+              <td>84.7%</td>
+              <td>0.85</td>
+              <td>0.84</td>
+              <td>0.84</td>
+            </tr>
+            <tr>
+              <td><span class="classifier-badge gb">Gradient Boost</span></td>
+              <td>89.6%</td>
+              <td>0.90</td>
+              <td>0.89</td>
+              <td>0.89</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Applications -->
+  <section class="section" id="applications">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">05 / Applications</span>
+        <h2 class="section-title">Real-World Impact</h2>
+      </div>
+
+      <div class="apps-grid">
+        <div class="app-card app-card-featured reveal" data-delay="0">
+          <div class="app-card-tag">Primary</div>
+          <div class="app-card-icon">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <rect x="4" y="8" width="32" height="24" rx="2" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M4 14h32M14 14v18M26 14v18" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+              <circle cx="20" cy="22" r="3" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M17 22a3 3 0 016 0" stroke="currentColor" stroke-width="1" opacity="0.5"/>
+            </svg>
+          </div>
+          <h3>Building Reconnaissance</h3>
+          <p>Characterize interior layouts, wall composition, and structural elements using Wi-Fi signals &mdash; without visual access. Map room boundaries and identify construction materials remotely.</p>
+        </div>
+
+        <div class="app-card reveal" data-delay="100">
+          <div class="app-card-icon">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <path d="M20 4l12 8v16l-12 8-12-8V12l12-8z" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M20 12v16M12 16l8 4 8-4" stroke="currentColor" stroke-width="1" opacity="0.4"/>
+            </svg>
+          </div>
+          <h3>Search &amp; Rescue</h3>
+          <p>Rapid structural assessment during emergencies. Identify floor materials, wall thickness, and potential hazards before entry.</p>
+        </div>
+
+        <div class="app-card reveal" data-delay="200">
+          <div class="app-card-icon">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <rect x="6" y="6" width="28" height="28" rx="4" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M14 20h12M20 14v12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="14" cy="14" r="2" fill="currentColor" opacity="0.3"/>
+              <circle cx="26" cy="26" r="2" fill="currentColor" opacity="0.3"/>
+            </svg>
+          </div>
+          <h3>Smart Buildings</h3>
+          <p>Material-aware automation adapting HVAC, lighting, and acoustic settings based on real-time wall and floor composition data.</p>
+        </div>
+
+        <div class="app-card reveal" data-delay="300">
+          <div class="app-card-icon">
+            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+              <path d="M8 32V16l12-8 12 8v16" stroke="currentColor" stroke-width="1.5"/>
+              <rect x="16" y="22" width="8" height="10" stroke="currentColor" stroke-width="1.5"/>
+              <path d="M4 32h32" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <h3>Construction QA</h3>
+          <p>Non-destructive verification of building materials during and after construction. Detect substitutions or structural deficiencies.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hardware -->
+  <section class="section section-dark" id="hardware">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">06 / Hardware</span>
+        <h2 class="section-title">What You Need</h2>
+        <p class="section-desc">WiSpec runs on commodity hardware. No specialized RF equipment required.</p>
+      </div>
+
+      <div class="hardware-grid">
+        <div class="hw-card reveal" data-delay="0">
+          <div class="hw-card-tier">Tier A &mdash; RSSI Pilot</div>
+          <div class="hw-card-items">
+            <div class="hw-item">
+              <div class="hw-item-name">Xiaomi Mi Router 4C</div>
+              <div class="hw-item-detail">MT7628AN &bull; OpenWrt &bull; 2.4 GHz TX</div>
+              <div class="hw-item-price">~$25</div>
+            </div>
+            <div class="hw-item">
+              <div class="hw-item-name">Intel AX201 (built-in)</div>
+              <div class="hw-item-detail">CNVi &bull; 2.4 + 5 GHz RX &bull; RSSI only</div>
+              <div class="hw-item-price">$0</div>
+            </div>
+          </div>
+          <div class="hw-card-total">
+            <span>Total</span>
+            <strong>~$25</strong>
+          </div>
+          <div class="hw-card-note">Baseline dual-band RSSI measurements. 78&ndash;82% accuracy.</div>
+        </div>
+
+        <div class="hw-card hw-card-recommended reveal" data-delay="150">
+          <div class="hw-card-badge">Recommended</div>
+          <div class="hw-card-tier">Tier B &mdash; CSI Classification</div>
+          <div class="hw-card-items">
+            <div class="hw-item">
+              <div class="hw-item-name">Intel AX200 M.2</div>
+              <div class="hw-item-detail">PicoScenes compatible &bull; 2.4 + 5 GHz CSI</div>
+              <div class="hw-item-price">~$18</div>
+            </div>
+            <div class="hw-item">
+              <div class="hw-item-name">Dual-Band AP</div>
+              <div class="hw-item-detail">Any modern dual-band router as TX</div>
+              <div class="hw-item-price">~$30</div>
+            </div>
+            <div class="hw-item">
+              <div class="hw-item-name">Material Samples</div>
+              <div class="hw-item-detail">30&times;30 cm panels for controlled testing</div>
+              <div class="hw-item-price">~$50</div>
+            </div>
+          </div>
+          <div class="hw-card-total">
+            <span>Total</span>
+            <strong>~$98</strong>
+          </div>
+          <div class="hw-card-note">Per-subcarrier CSI extraction enables 85&ndash;95% accuracy. Full feature pipeline.</div>
+        </div>
+
+        <div class="hw-card reveal" data-delay="300">
+          <div class="hw-card-tier">Tier B+ &mdash; Tri-Band</div>
+          <div class="hw-card-items">
+            <div class="hw-item">
+              <div class="hw-item-name">Intel AX210 M.2</div>
+              <div class="hw-item-detail">2.4 + 5 + 6 GHz &bull; CSI on all bands</div>
+              <div class="hw-item-price">~$22</div>
+            </div>
+            <div class="hw-item">
+              <div class="hw-item-name">Wi-Fi 6E AP</div>
+              <div class="hw-item-detail">Tri-band router as TX source</div>
+              <div class="hw-item-price">~$80</div>
+            </div>
+          </div>
+          <div class="hw-card-total">
+            <span>Total</span>
+            <strong>~$175</strong>
+          </div>
+          <div class="hw-card-note">Adds 6 GHz band for novel tri-band spectroscopy research.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pipeline -->
+  <section class="section" id="pipeline">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">07 / Pipeline</span>
+        <h2 class="section-title">Analysis Architecture</h2>
+        <p class="section-desc">End-to-end modular pipeline: ~5,000 lines of Python covering data collection through publication-quality output.</p>
+      </div>
+
+      <div class="arch-flow reveal">
+        <div class="arch-stage">
+          <div class="arch-stage-header">Collection</div>
+          <div class="arch-node">dual_band_rssi_collector.py</div>
+          <div class="arch-node">csi_experiment_controller.py</div>
+        </div>
+        <div class="arch-arrow"></div>
+        <div class="arch-stage">
+          <div class="arch-stage-header">Preprocessing</div>
+          <div class="arch-node">preprocess_rssi.py</div>
+          <div class="arch-node">preprocess_csi.py</div>
+        </div>
+        <div class="arch-arrow"></div>
+        <div class="arch-stage">
+          <div class="arch-stage-header">Features</div>
+          <div class="arch-node highlight">feature_extraction.py</div>
+        </div>
+        <div class="arch-arrow"></div>
+        <div class="arch-stage">
+          <div class="arch-stage-header">Classification</div>
+          <div class="arch-node highlight">classify_materials.py</div>
+        </div>
+        <div class="arch-arrow"></div>
+        <div class="arch-stage">
+          <div class="arch-stage-header">Output</div>
+          <div class="arch-node">visualize_results.py</div>
+          <div class="arch-node">statistical_tests.py</div>
+        </div>
+      </div>
+
+      <div class="arch-stats reveal" data-delay="200">
+        <div class="arch-stat">
+          <span class="arch-stat-val">4,953</span>
+          <span class="arch-stat-label">Lines of Python</span>
+        </div>
+        <div class="arch-stat">
+          <span class="arch-stat-val">8</span>
+          <span class="arch-stat-label">Publication Figures</span>
+        </div>
+        <div class="arch-stat">
+          <span class="arch-stat-val">5</span>
+          <span class="arch-stat-label">ML Classifiers</span>
+        </div>
+        <div class="arch-stat">
+          <span class="arch-stat-val">20+</span>
+          <span class="arch-stat-label">Academic Citations</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cite -->
+  <section class="section section-dark" id="cite">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">08 / Citation</span>
+        <h2 class="section-title">Cite This Work</h2>
+      </div>
+
+      <div class="cite-grid">
+        <div class="cite-block reveal">
+          <div class="cite-block-header">
+            <span>BibTeX</span>
+            <button class="cite-copy-btn" data-target="bibtex" aria-label="Copy BibTeX">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M3 11V3h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre id="bibtex"><code>@software{ranish_wispec_2026,
+  author    = {Ranish, Abhinav},
+  title     = {{WiSpec}: Commodity Dual-Band
+               Wi-Fi Spectroscopy for Material
+               Classification},
+  year      = {2026},
+  institution = {Arizona State University},
+  url       = {https://github.com/aranish/wispec}
+}</code></pre>
+        </div>
+
+        <div class="cite-block reveal" data-delay="100">
+          <div class="cite-block-header">
+            <span>APA</span>
+            <button class="cite-copy-btn" data-target="apa" aria-label="Copy APA">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="5" y="5" width="9" height="9" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M3 11V3h8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              <span>Copy</span>
+            </button>
+          </div>
+          <pre id="apa"><code>Ranish, A. (2026). WiSpec: Commodity
+Dual-Band Wi-Fi Spectroscopy for Material
+Classification and Structural
+Reconnaissance [Software]. Arizona State
+University.</code></pre>
+        </div>
+      </div>
+
+      <div class="cite-license reveal" data-delay="200">
+        <div class="cite-license-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v10l9 5 9-5V7l-9-5z" stroke="currentColor" stroke-width="1.5"/><path d="M12 12v5M9 10.5L12 12l3-1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <strong>Source-Available, Noncommercial License</strong>
+          <p>Free for academic research, personal learning, and student thesis (with citation). Commercial use requires a paid license. Contact <a href="mailto:chatgpt@asu.edu">chatgpt@asu.edu</a> for licensing inquiries.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="nav-logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+              <path d="M8 12a4 4 0 018 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+              <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+            </svg>
+          </span>
+          <span>WiSpec</span>
+        </div>
+        <p class="footer-copy">Abhinav Ranish &bull; Arizona State University &bull; 2026</p>
+        <div class="footer-links">
+          <a href="mailto:chatgpt@asu.edu">Contact</a>
+          <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
