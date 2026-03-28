@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#06080d"/>
+      <stop offset="100%" stop-color="#0b0e14"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#00e5ff" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#00e5ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00e5ff"/>
+      <stop offset="100%" stop-color="#39ff14"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- Grid pattern -->
+  <g opacity="0.04" stroke="#00e5ff" stroke-width="0.5">
+    <line x1="0" y1="100" x2="1200" y2="100"/><line x1="0" y1="200" x2="1200" y2="200"/>
+    <line x1="0" y1="300" x2="1200" y2="300"/><line x1="0" y1="400" x2="1200" y2="400"/>
+    <line x1="0" y1="500" x2="1200" y2="500"/>
+    <line x1="200" y1="0" x2="200" y2="630"/><line x1="400" y1="0" x2="400" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/><line x1="800" y1="0" x2="800" y2="630"/>
+    <line x1="1000" y1="0" x2="1000" y2="630"/>
+  </g>
+
+  <!-- Wave: 2.4 GHz (cyan) -->
+  <path d="M0,315 Q100,265 200,315 Q300,365 400,315 Q500,265 600,315 Q700,365 800,315 Q900,265 1000,315 Q1100,365 1200,315"
+        stroke="#00e5ff" stroke-width="2" fill="none" opacity="0.15"/>
+  <path d="M0,315 Q75,280 150,315 Q225,350 300,315 Q375,280 450,315 Q525,350 600,315 Q675,280 750,315 Q825,350 900,315 Q975,280 1050,315 Q1125,350 1200,315"
+        stroke="#00e5ff" stroke-width="1.5" fill="none" opacity="0.08"/>
+
+  <!-- Wave: 5 GHz (green, higher freq) -->
+  <path d="M0,315 Q50,285 100,315 Q150,345 200,315 Q250,285 300,315 Q350,345 400,315 Q450,285 500,315 Q550,345 600,315 Q650,285 700,315 Q750,345 800,315 Q850,285 900,315 Q950,345 1000,315 Q1050,285 1100,315 Q1150,345 1200,315"
+        stroke="#39ff14" stroke-width="1.5" fill="none" opacity="0.12"/>
+
+  <!-- Logo icon -->
+  <g transform="translate(100, 160)">
+    <circle cx="0" cy="0" r="28" stroke="#00e5ff" stroke-width="2" fill="none"/>
+    <path d="M-15,0 a15,15 0 0,1 30,0" stroke="#00e5ff" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+    <path d="M-24,0 a24,24 0 0,1 48,0" stroke="#00e5ff" stroke-width="1.5" stroke-linecap="round" fill="none" opacity="0.5"/>
+    <circle cx="0" cy="0" r="4" fill="#00e5ff"/>
+  </g>
+
+  <!-- Title -->
+  <text x="155" y="175" font-family="system-ui, -apple-system, sans-serif" font-size="72" font-weight="800" fill="#e6edf3" letter-spacing="-2">Wi<tspan fill="url(#accent)">Spec</tspan></text>
+
+  <!-- Subtitle -->
+  <text x="100" y="230" font-family="monospace" font-size="20" fill="#8b949e" letter-spacing="1">Commodity Dual-Band Wi-Fi Spectroscopy</text>
+
+  <!-- Description -->
+  <text x="100" y="290" font-family="system-ui, -apple-system, sans-serif" font-size="22" fill="#8b949e">Classify building materials using off-the-shelf Wi-Fi hardware.</text>
+  <text x="100" y="320" font-family="system-ui, -apple-system, sans-serif" font-size="22" fill="#8b949e">Dual-band frequency-differential attenuation achieves</text>
+  <text x="100" y="350" font-family="system-ui, -apple-system, sans-serif" font-size="22" fill="#00e5ff" font-weight="600">91% classification accuracy.</text>
+
+  <!-- Stats bar -->
+  <g transform="translate(100, 420)">
+    <rect x="0" y="0" width="300" height="80" rx="8" fill="#111620" stroke="#1c2333" stroke-width="1"/>
+    <text x="30" y="35" font-family="monospace" font-size="28" font-weight="700" fill="#00e5ff">91%</text>
+    <text x="30" y="58" font-family="system-ui, sans-serif" font-size="11" fill="#484f58" letter-spacing="1">ACCURACY</text>
+
+    <line x1="120" y1="15" x2="120" y2="65" stroke="#1c2333" stroke-width="1"/>
+
+    <text x="145" y="35" font-family="monospace" font-size="28" font-weight="700" fill="#00e5ff">6</text>
+    <text x="145" y="58" font-family="system-ui, sans-serif" font-size="11" fill="#484f58" letter-spacing="1">MATERIALS</text>
+
+    <line x1="220" y1="15" x2="220" y2="65" stroke="#1c2333" stroke-width="1"/>
+
+    <text x="245" y="35" font-family="monospace" font-size="28" font-weight="700" fill="#00e5ff">&lt;$200</text>
+    <text x="245" y="58" font-family="system-ui, sans-serif" font-size="11" fill="#484f58" letter-spacing="1">HARDWARE</text>
+  </g>
+
+  <!-- Author line -->
+  <text x="100" y="560" font-family="system-ui, -apple-system, sans-serif" font-size="16" fill="#484f58">Abhinav Ranish · Student @ Arizona State University</text>
+
+  <!-- Border accent line -->
+  <rect x="0" y="0" width="1200" height="3" fill="url(#accent)"/>
+</svg>
