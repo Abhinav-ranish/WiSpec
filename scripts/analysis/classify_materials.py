@@ -8,15 +8,17 @@ This module:
   - Performs stratified k-fold cross-validation (k=5)
   - Performs leave-one-environment-out (LOEO) evaluation
   - Computes per-class metrics (precision, recall, F1)
-  - CRITICAL: Executes ablation study (single-band vs dual-band)
+  - CRITICAL: Executes ablation study (single-band vs dual-band vs tri-band)
   - Statistical significance testing (McNemar, paired t-test)
   - Outputs confusion matrices, feature importance rankings
 
 ABLATION STUDY (Core contribution):
   - Train with 2.4 GHz features only -> accuracy_2g
   - Train with 5 GHz features only -> accuracy_5g
-  - Train with dual-band features -> accuracy_dual
-  - McNemar's test for statistical significance
+  - Train with 6 GHz features only -> accuracy_6g
+  - Train with dual-band features (2.4+5) -> accuracy_dual
+  - Train with tri-band features (2.4+5+6) -> accuracy_tri
+  - McNemar's test for statistical significance (tri vs dual, tri vs single)
   - Effect size (Cohen's h)
 
 Author: Wi-Fi Sensing Research Team
@@ -282,7 +284,9 @@ class AblationStudy:
                  X_dual: np.ndarray,
                  y: np.ndarray,
                  classifier_name: str = 'random_forest',
-                 n_splits: int = 5):
+                 n_splits: int = 5,
+                 X_6g: Optional[np.ndarray] = None,
+                 X_tri: Optional[np.ndarray] = None):
         """
         Initialize ablation study.
 
@@ -293,35 +297,48 @@ class AblationStudy:
             y: Labels (n_samples,)
             classifier_name: Classifier to use
             n_splits: Number of cross-validation splits
+            X_6g: Optional 6 GHz features (n_samples, n_features_6g)
+            X_tri: Optional tri-band features (n_samples, n_features_tri)
         """
         self.X_2g = X_2g
         self.X_5g = X_5g
         self.X_dual = X_dual
+        self.X_6g = X_6g
+        self.X_tri = X_tri
         self.y = y
         self.classifier_name = classifier_name
         self.n_splits = n_splits
+        self.has_6g = X_6g is not None and X_tri is not None
 
         self.results = {
             '2g': [],
             '5g': [],
             'dual': []
         }
+        if self.has_6g:
+            self.results['6g'] = []
+            self.results['tri'] = []
 
         self.predictions = {
             '2g': None,
             '5g': None,
             'dual': None
         }
+        if self.has_6g:
+            self.predictions['6g'] = None
+            self.predictions['tri'] = None
 
     def run_ablation(self) -> Dict:
         """
         Run complete ablation study with stratified k-fold CV.
+        Supports both dual-band and tri-band (if 6 GHz data provided).
 
         Returns:
             Dictionary with ablation results and statistics
         """
+        study_type = "Single-band vs Dual-band vs Tri-band" if self.has_6g else "Single-band vs Dual-band"
         logger.info("=" * 70)
-        logger.info("ABLATION STUDY: Single-band vs Dual-band")
+        logger.info(f"ABLATION STUDY: {study_type}")
         logger.info("=" * 70)
 
         skf = StratifiedKFold(n_splits=self.n_splits, shuffle=True, random_state=42)
@@ -329,7 +346,9 @@ class AblationStudy:
         # Storage for fold-wise results
         accuracies_2g = []
         accuracies_5g = []
+        accuracies_6g = []
         accuracies_dual = []
+        accuracies_tri = []
 
         fold_count = 0
 
@@ -370,8 +389,32 @@ class AblationStudy:
             self.results['dual'].append({'fold': fold_idx, 'accuracy': acc_dual})
             logger.info(f"  Dual-band accuracy: {acc_dual:.4f}")
 
-            logger.info(f"  Improvement (dual vs 2.4): {acc_dual - acc_2g:+.4f}")
-            logger.info(f"  Improvement (dual vs 5): {acc_dual - acc_5g:+.4f}")
+            # Train 6 GHz and tri-band classifiers if available
+            if self.has_6g:
+                X_6g_train, X_6g_test = self.X_6g[train_idx], self.X_6g[test_idx]
+                X_tri_train, X_tri_test = self.X_tri[train_idx], self.X_tri[test_idx]
+
+                clf_6g = MaterialClassifier(self.classifier_name)
+                clf_6g.train(X_6g_train, y_train)
+                y_pred_6g = clf_6g.predict(X_6g_test)
+                acc_6g = accuracy_score(y_test, y_pred_6g)
+                accuracies_6g.append(acc_6g)
+                self.results['6g'].append({'fold': fold_idx, 'accuracy': acc_6g})
+                logger.info(f"  6 GHz accuracy: {acc_6g:.4f}")
+
+                clf_tri = MaterialClassifier(self.classifier_name)
+                clf_tri.train(X_tri_train, y_train)
+                y_pred_tri = clf_tri.predict(X_tri_test)
+                acc_tri = accuracy_score(y_test, y_pred_tri)
+                accuracies_tri.append(acc_tri)
+                self.results['tri'].append({'fold': fold_idx, 'accuracy': acc_tri})
+                logger.info(f"  Tri-band accuracy: {acc_tri:.4f}")
+
+                logger.info(f"  Improvement (tri vs dual): {acc_tri - acc_dual:+.4f}")
+                logger.info(f"  Improvement (tri vs best single): {acc_tri - max(acc_2g, acc_5g, acc_6g):+.4f}")
+            else:
+                logger.info(f"  Improvement (dual vs 2.4): {acc_dual - acc_2g:+.4f}")
+                logger.info(f"  Improvement (dual vs 5): {acc_dual - acc_5g:+.4f}")
 
         # Aggregate results
         mean_acc_2g = np.mean(accuracies_2g)
@@ -394,6 +437,20 @@ class AblationStudy:
             'accuracy_dual_folds': accuracies_dual,
         }
 
+        if self.has_6g:
+            mean_acc_6g = np.mean(accuracies_6g)
+            std_acc_6g = np.std(accuracies_6g)
+            mean_acc_tri = np.mean(accuracies_tri)
+            std_acc_tri = np.std(accuracies_tri)
+            ablation_results.update({
+                'accuracy_6g_mean': mean_acc_6g,
+                'accuracy_6g_std': std_acc_6g,
+                'accuracy_6g_folds': accuracies_6g,
+                'accuracy_tri_mean': mean_acc_tri,
+                'accuracy_tri_std': std_acc_tri,
+                'accuracy_tri_folds': accuracies_tri,
+            })
+
         # Statistical significance tests
         logger.info("\n" + "=" * 70)
         logger.info("STATISTICAL SIGNIFICANCE TESTS")
@@ -401,7 +458,6 @@ class AblationStudy:
 
         # McNemar's test: dual vs 2.4G
         try:
-            # Recompute full-dataset predictions for McNemar test
             clf_2g_full = MaterialClassifier(self.classifier_name)
             clf_2g_full.train(self.X_2g, self.y)
             y_pred_2g_full = clf_2g_full.predict(self.X_2g)
@@ -410,7 +466,6 @@ class AblationStudy:
             clf_dual_full.train(self.X_dual, self.y)
             y_pred_dual_full = clf_dual_full.predict(self.X_dual)
 
-            # McNemar's test (comparing two classifiers on same data)
             table = self._build_mcnemar_table(self.y, y_pred_2g_full, y_pred_dual_full)
             mcnemar_result = mcnemar(table)
 
@@ -421,6 +476,30 @@ class AblationStudy:
 
             ablation_results['mcnemar_dual_vs_2g_pvalue'] = mcnemar_result.pvalue
             ablation_results['mcnemar_dual_vs_2g_stat'] = mcnemar_result.statistic
+
+            # McNemar: tri vs dual (if applicable)
+            if self.has_6g:
+                clf_tri_full = MaterialClassifier(self.classifier_name)
+                clf_tri_full.train(self.X_tri, self.y)
+                y_pred_tri_full = clf_tri_full.predict(self.X_tri)
+
+                table_tri = self._build_mcnemar_table(self.y, y_pred_dual_full, y_pred_tri_full)
+                mcnemar_tri = mcnemar(table_tri)
+
+                logger.info(f"\nMcNemar's test (Tri-band vs Dual-band):")
+                logger.info(f"  p-value: {mcnemar_tri.pvalue:.6f}")
+                logger.info(f"  Statistic: {mcnemar_tri.statistic:.4f}")
+                logger.info(f"  Significant at 0.05: {mcnemar_tri.pvalue < 0.05}")
+
+                ablation_results['mcnemar_tri_vs_dual_pvalue'] = mcnemar_tri.pvalue
+                ablation_results['mcnemar_tri_vs_dual_stat'] = mcnemar_tri.statistic
+
+                # McNemar: tri vs best single-band
+                table_tri_2g = self._build_mcnemar_table(self.y, y_pred_2g_full, y_pred_tri_full)
+                mcnemar_tri_2g = mcnemar(table_tri_2g)
+                logger.info(f"\nMcNemar's test (Tri-band vs 2.4 GHz):")
+                logger.info(f"  p-value: {mcnemar_tri_2g.pvalue:.6f}")
+                ablation_results['mcnemar_tri_vs_2g_pvalue'] = mcnemar_tri_2g.pvalue
 
         except Exception as e:
             logger.warning(f"Could not compute McNemar test: {e}")
@@ -443,15 +522,36 @@ class AblationStudy:
         ablation_results['ttest_dual_vs_5g_pvalue'] = p_value_5g
         ablation_results['ttest_dual_vs_5g_stat'] = t_stat_5g
 
+        # Tri-band t-tests
+        if self.has_6g:
+            t_stat_tri_dual, p_value_tri_dual = ttest_rel(accuracies_tri, accuracies_dual)
+            logger.info(f"\nPaired t-test (Tri-band vs Dual-band fold accuracies):")
+            logger.info(f"  t-statistic: {t_stat_tri_dual:.4f}")
+            logger.info(f"  p-value: {p_value_tri_dual:.6f}")
+            logger.info(f"  Significant at 0.05: {p_value_tri_dual < 0.05}")
+            ablation_results['ttest_tri_vs_dual_pvalue'] = p_value_tri_dual
+            ablation_results['ttest_tri_vs_dual_stat'] = t_stat_tri_dual
+
+            t_stat_tri_2g, p_value_tri_2g = ttest_rel(accuracies_tri, accuracies_2g)
+            ablation_results['ttest_tri_vs_2g_pvalue'] = p_value_tri_2g
+            ablation_results['ttest_tri_vs_2g_stat'] = t_stat_tri_2g
+
         # Summary
         logger.info("\n" + "=" * 70)
         logger.info("ABLATION SUMMARY")
         logger.info("=" * 70)
         logger.info(f"2.4 GHz only:    {mean_acc_2g:.4f} ± {std_acc_2g:.4f}")
         logger.info(f"5 GHz only:      {mean_acc_5g:.4f} ± {std_acc_5g:.4f}")
+        if self.has_6g:
+            logger.info(f"6 GHz only:      {mean_acc_6g:.4f} ± {std_acc_6g:.4f}")
         logger.info(f"Dual-band:       {mean_acc_dual:.4f} ± {std_acc_dual:.4f}")
+        if self.has_6g:
+            logger.info(f"Tri-band:        {mean_acc_tri:.4f} ± {std_acc_tri:.4f}")
         logger.info(f"\nImprovement (Dual vs 2.4 GHz): {mean_acc_dual - mean_acc_2g:+.4f}")
         logger.info(f"Improvement (Dual vs 5 GHz):  {mean_acc_dual - mean_acc_5g:+.4f}")
+        if self.has_6g:
+            logger.info(f"Improvement (Tri vs Dual):    {mean_acc_tri - mean_acc_dual:+.4f}")
+            logger.info(f"Improvement (Tri vs 2.4 GHz): {mean_acc_tri - mean_acc_2g:+.4f}")
         logger.info("=" * 70)
 
         return ablation_results
@@ -533,9 +633,11 @@ def main():
     n_samples = 300
     n_features_2g = 8
     n_features_5g = 10
+    n_features_6g = 12
 
     X_2g = np.random.randn(n_samples, n_features_2g)
     X_5g = np.random.randn(n_samples, n_features_5g)
+    X_6g = np.random.randn(n_samples, n_features_6g)
 
     # Combine for dual-band features
     X_dual = np.column_stack([
@@ -544,15 +646,30 @@ def main():
         X_5g - X_2g[:, :min(n_features_2g, n_features_5g)]
     ])
 
+    # Combine for tri-band features
+    min_feat = min(n_features_2g, n_features_5g, n_features_6g)
+    X_tri = np.column_stack([
+        X_2g, X_5g, X_6g,
+        X_5g[:, :min_feat] - X_2g[:, :min_feat],
+        X_6g[:, :min_feat] - X_2g[:, :min_feat],
+        X_6g[:, :min_feat] - X_5g[:, :min_feat],
+        (X_6g[:, :min_feat] - X_5g[:, :min_feat]) - (X_5g[:, :min_feat] - X_2g[:, :min_feat])  # curvature
+    ])
+
     # Generate labels
     materials = np.array(['concrete', 'drywall', 'wood', 'metal'])
     y = np.random.choice(materials, size=n_samples)
 
     logger.info(f"Dataset: {n_samples} samples, {len(np.unique(y))} material classes")
-    logger.info(f"Features: 2.4 GHz={X_2g.shape[1]}, 5 GHz={X_5g.shape[1]}, Dual={X_dual.shape[1]}")
+    logger.info(f"Features: 2.4 GHz={X_2g.shape[1]}, 5 GHz={X_5g.shape[1]}, "
+                f"6 GHz={X_6g.shape[1]}, Dual={X_dual.shape[1]}, Tri={X_tri.shape[1]}")
 
-    # Run ablation study
-    ablation = AblationStudy(X_2g, X_5g, X_dual, y, classifier_name='random_forest', n_splits=5)
+    # Run ablation study with tri-band
+    ablation = AblationStudy(
+        X_2g, X_5g, X_dual, y,
+        classifier_name='random_forest', n_splits=5,
+        X_6g=X_6g, X_tri=X_tri
+    )
     results = ablation.run_ablation()
 
     # Print results
@@ -560,8 +677,10 @@ def main():
     logger.info("ABLATION RESULTS SUMMARY")
     logger.info("=" * 70)
 
-    for key in ['accuracy_2g_mean', 'accuracy_5g_mean', 'accuracy_dual_mean']:
-        logger.info(f"{key}: {results[key]:.4f} ± {results[key.replace('_mean', '_std')]:.4f}")
+    for key in ['accuracy_2g_mean', 'accuracy_5g_mean', 'accuracy_6g_mean',
+                'accuracy_dual_mean', 'accuracy_tri_mean']:
+        if key in results:
+            logger.info(f"{key}: {results[key]:.4f} ± {results[key.replace('_mean', '_std')]:.4f}")
 
 
 if __name__ == '__main__':

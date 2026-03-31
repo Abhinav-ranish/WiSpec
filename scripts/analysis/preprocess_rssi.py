@@ -1,13 +1,13 @@
 """
 preprocess_rssi.py
 
-Load, clean, and compute dual-band RSSI statistics from Wi-Fi sensing experiments.
+Load, clean, and compute tri-band RSSI statistics from Wi-Fi sensing experiments.
 
 This module:
-  - Loads CSV data from dual_band_rssi_collector.py
+  - Loads CSV data from dual_band_rssi_collector.py (supports 2.4, 5, and 6 GHz)
   - Removes outliers (3-sigma rule per phase)
   - Computes per-phase statistics (mean, std, median, IQR)
-  - Derives dual-band features (delta_rssi, ratio_rssi, attenuation, etc.)
+  - Derives tri-band features (pairwise delta_rssi, ratio_rssi, attenuation, spectral curvature)
   - Outputs cleaned DataFrame and summary statistics
 
 Author: Wi-Fi Sensing Research Team
@@ -30,9 +30,10 @@ logger = logging.getLogger(__name__)
 
 class RSSIPreprocessor:
     """
-    Preprocessor for dual-band Wi-Fi RSSI measurements.
+    Preprocessor for tri-band Wi-Fi RSSI measurements (2.4, 5, and 6 GHz).
 
     Handles loading, cleaning, and feature engineering on raw RSSI CSV data.
+    Backward-compatible with dual-band (2.4 + 5 GHz) data.
     """
 
     EXPECTED_COLUMNS = [
@@ -208,23 +209,31 @@ class RSSIPreprocessor:
 
     def compute_dual_band_features(self) -> pd.DataFrame:
         """
-        Compute dual-band differential features.
+        Compute tri-band differential features (backward-compatible: works with 2 or 3 bands).
 
-        For each trial and phase, pair 2.4 GHz and 5 GHz measurements:
-          - delta_rssi = rssi_5g - rssi_2.4g
-          - ratio_rssi = rssi_5g / rssi_2.4g
-          - attenuation_2g = baseline_rssi - rssi_2.4g (per phase)
-          - attenuation_5g = baseline_rssi - rssi_5g (per phase)
-          - delta_attenuation = atten_5g - atten_2.4g
-          - ratio_attenuation = atten_5g / atten_2.4g
+        For each trial and phase, pair measurements across available bands:
+          Pairwise differentials:
+          - delta_rssi_5g_minus_2g = rssi_5g - rssi_2.4g
+          - delta_rssi_6g_minus_2g = rssi_6g - rssi_2.4g (if 6 GHz available)
+          - delta_rssi_6g_minus_5g = rssi_6g - rssi_5g (if 6 GHz available)
+          Attenuation relative to baseline:
+          - attenuation_2g, attenuation_5g, attenuation_6g
+          - delta_attenuation for all band pairs
+          Tri-band spectral curvature:
+          - spectral_curvature = (atten_6g - atten_5g) - (atten_5g - atten_2g)
 
         Returns:
-            DataFrame with dual-band features
+            DataFrame with tri-band features
         """
         if self.statistics.get('phase_stats') is None:
             raise ValueError("Phase statistics not computed. Call compute_phase_statistics() first.")
 
         phase_stats = self.statistics['phase_stats']
+
+        # Detect available bands
+        available_bands = phase_stats['band'].unique().tolist()
+        has_6g = '6GHz' in available_bands
+        logger.info(f"Available bands: {available_bands}")
 
         # Find baseline (control) phase for each trial/material/environment
         baseline_stats = phase_stats[phase_stats['phase_label'] == 'baseline'].copy()
@@ -233,11 +242,13 @@ class RSSIPreprocessor:
             logger.warning("No baseline phase found. Using overall mean RSSI as baseline.")
             baseline_rssi_2g = phase_stats[phase_stats['band'] == '2.4GHz']['rssi_mean'].mean()
             baseline_rssi_5g = phase_stats[phase_stats['band'] == '5GHz']['rssi_mean'].mean()
+            baseline_rssi_6g = phase_stats[phase_stats['band'] == '6GHz']['rssi_mean'].mean() if has_6g else np.nan
         else:
             baseline_rssi_2g = baseline_stats[baseline_stats['band'] == '2.4GHz']['rssi_mean'].mean()
             baseline_rssi_5g = baseline_stats[baseline_stats['band'] == '5GHz']['rssi_mean'].mean()
+            baseline_rssi_6g = baseline_stats[baseline_stats['band'] == '6GHz']['rssi_mean'].mean() if has_6g else np.nan
 
-        # Pivot to get 2.4 GHz and 5 GHz measurements side by side
+        # Pivot to get all bands side by side
         pivot_cols = ['trial_id', 'phase_label', 'material_class', 'environment_id']
 
         rssi_pivot = phase_stats.pivot_table(
@@ -249,15 +260,15 @@ class RSSIPreprocessor:
 
         rssi_pivot.columns.name = None
 
-        # Ensure both bands present
-        if '2.4GHz' not in rssi_pivot.columns or '5GHz' not in rssi_pivot.columns:
+        # Ensure required bands present
+        required_bands = ['2.4GHz', '5GHz']
+        if not all(b in rssi_pivot.columns for b in required_bands):
             logger.warning("Not all trials have both 2.4 GHz and 5 GHz measurements")
-            rssi_pivot = rssi_pivot.dropna(subset=['2.4GHz', '5GHz'])
+            rssi_pivot = rssi_pivot.dropna(subset=required_bands)
 
-        # Compute differences and ratios
+        # --- Dual-band features (always computed) ---
         rssi_pivot['delta_rssi_5g_minus_2g'] = rssi_pivot['5GHz'] - rssi_pivot['2.4GHz']
 
-        # Avoid division by zero
         rssi_pivot['ratio_rssi_5g_div_2g'] = np.where(
             rssi_pivot['2.4GHz'] != 0,
             rssi_pivot['5GHz'] / rssi_pivot['2.4GHz'],
@@ -276,9 +287,48 @@ class RSSIPreprocessor:
             np.nan
         )
 
+        # --- 6 GHz features (computed if 6 GHz data available) ---
+        if has_6g and '6GHz' in rssi_pivot.columns:
+            logger.info("Computing 6 GHz tri-band features...")
+
+            rssi_pivot['delta_rssi_6g_minus_2g'] = rssi_pivot['6GHz'] - rssi_pivot['2.4GHz']
+            rssi_pivot['delta_rssi_6g_minus_5g'] = rssi_pivot['6GHz'] - rssi_pivot['5GHz']
+
+            rssi_pivot['ratio_rssi_6g_div_2g'] = np.where(
+                rssi_pivot['2.4GHz'] != 0,
+                rssi_pivot['6GHz'] / rssi_pivot['2.4GHz'],
+                np.nan
+            )
+            rssi_pivot['ratio_rssi_6g_div_5g'] = np.where(
+                rssi_pivot['5GHz'] != 0,
+                rssi_pivot['6GHz'] / rssi_pivot['5GHz'],
+                np.nan
+            )
+
+            # 6 GHz attenuation
+            rssi_pivot['attenuation_6g'] = baseline_rssi_6g - rssi_pivot['6GHz']
+
+            rssi_pivot['delta_attenuation_6g_minus_2g'] = rssi_pivot['attenuation_6g'] - rssi_pivot['attenuation_2g']
+            rssi_pivot['delta_attenuation_6g_minus_5g'] = rssi_pivot['attenuation_6g'] - rssi_pivot['attenuation_5g']
+
+            rssi_pivot['ratio_attenuation_6g_div_2g'] = np.where(
+                rssi_pivot['attenuation_2g'] != 0,
+                rssi_pivot['attenuation_6g'] / rssi_pivot['attenuation_2g'],
+                np.nan
+            )
+
+            # Tri-band spectral curvature: measures non-linearity of attenuation across frequency
+            # Positive curvature = attenuation accelerates at higher freq (e.g., concrete)
+            # Negative curvature = attenuation decelerates (e.g., glass)
+            rssi_pivot['spectral_curvature'] = (
+                rssi_pivot['delta_attenuation_6g_minus_5g'] -
+                rssi_pivot['delta_attenuation_5g_minus_2g']
+            )
+
         self.statistics['dual_band_features'] = rssi_pivot
 
-        logger.info(f"Computed dual-band features for {len(rssi_pivot)} trial phases")
+        n_bands = 3 if has_6g else 2
+        logger.info(f"Computed {n_bands}-band features for {len(rssi_pivot)} trial phases")
 
         return rssi_pivot
 
@@ -343,7 +393,7 @@ class RSSIPreprocessor:
 
         if 'dual_band_features' in self.statistics:
             dual_features = self.statistics['dual_band_features']
-            report.append(f"\nDual-band feature samples: {len(dual_features)}")
+            report.append(f"\nMulti-band feature samples: {len(dual_features)}")
             report.append(f"\nDelta RSSI (5G - 2.4G) statistics:")
             report.append(f"  Mean: {dual_features['delta_rssi_5g_minus_2g'].mean():.2f} dBm")
             report.append(f"  Std:  {dual_features['delta_rssi_5g_minus_2g'].std():.2f} dBm")
@@ -353,6 +403,18 @@ class RSSIPreprocessor:
             report.append(f"\nDelta Attenuation (5G - 2.4G) statistics:")
             report.append(f"  Mean: {dual_features['delta_attenuation_5g_minus_2g'].mean():.2f} dBm")
             report.append(f"  Std:  {dual_features['delta_attenuation_5g_minus_2g'].std():.2f} dBm")
+
+            # 6 GHz features if available
+            if 'delta_rssi_6g_minus_2g' in dual_features.columns:
+                report.append(f"\nDelta RSSI (6G - 2.4G) statistics:")
+                report.append(f"  Mean: {dual_features['delta_rssi_6g_minus_2g'].mean():.2f} dBm")
+                report.append(f"  Std:  {dual_features['delta_rssi_6g_minus_2g'].std():.2f} dBm")
+                report.append(f"\nDelta RSSI (6G - 5G) statistics:")
+                report.append(f"  Mean: {dual_features['delta_rssi_6g_minus_5g'].mean():.2f} dBm")
+                report.append(f"  Std:  {dual_features['delta_rssi_6g_minus_5g'].std():.2f} dBm")
+                report.append(f"\nSpectral Curvature statistics:")
+                report.append(f"  Mean: {dual_features['spectral_curvature'].mean():.2f} dBm")
+                report.append(f"  Std:  {dual_features['spectral_curvature'].std():.2f} dBm")
 
         report.append("=" * 70)
 

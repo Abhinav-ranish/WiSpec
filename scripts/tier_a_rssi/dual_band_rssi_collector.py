@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 """
-Dual-band RSSI collector for Wi-Fi sensing research.
+Tri-band RSSI collector for Wi-Fi sensing research.
 
-Collects RSSI measurements from both 2.4 GHz and 5 GHz bands using an Intel AX201
-or similar dual-band Wi-Fi card on Linux. Logs signal strength, noise, SNR, bitrate,
-and latency metrics to a CSV file for frequency-differential attenuation analysis.
+Collects RSSI measurements from 2.4 GHz, 5 GHz, and 6 GHz bands using an Intel
+AX210, AX211, or similar Wi-Fi 6E tri-band card on Linux. Logs signal strength,
+noise, SNR, bitrate, and latency metrics to a CSV file for frequency-differential
+attenuation analysis.
 
 Hardware Requirements:
-  - Intel AX201 (CNVi), AX200, AX210, or similar dual-band Wi-Fi card
+  - Intel AX210, AX211, or similar Wi-Fi 6E tri-band card
   - iw and iwconfig command-line tools (iw-tools, wireless-tools packages)
   - ping command for latency measurement
-  - Linux kernel with cfg80211 support
+  - Linux kernel with cfg80211 support and 6 GHz regulatory domain enabled
 
 Usage:
     python3 dual_band_rssi_collector.py \\
@@ -72,7 +73,7 @@ logger = logging.getLogger(__name__)
 class RSSICollector:
     """Collects RSSI measurements from Wi-Fi interface."""
 
-    # Frequency to channel mapping (simplified; 2.4 GHz and 5 GHz common channels)
+    # Frequency to channel mapping (2.4 GHz, 5 GHz, and 6 GHz bands)
     FREQ_TO_CHANNEL_2_4 = {
         2407: 0, 2412: 1, 2417: 2, 2422: 3, 2427: 4, 2432: 5, 2437: 6,
         2442: 7, 2447: 8, 2452: 9, 2457: 10, 2462: 11, 2467: 12, 2472: 13, 2484: 14
@@ -90,6 +91,21 @@ class RSSICollector:
         5720: 144, 5745: 149, 5755: 151, 5765: 153, 5775: 155, 5785: 157, 5795: 159,
         5805: 161, 5815: 163, 5825: 165, 5835: 167, 5845: 169, 5855: 171, 5865: 173,
         5875: 175, 5885: 177
+    }
+
+    # 6 GHz band: UNII-5 through UNII-8 (5.925 - 7.125 GHz)
+    # Channels 1-233, 20 MHz spacing, center frequencies starting at 5955 MHz
+    FREQ_TO_CHANNEL_6 = {
+        5955: 1, 5975: 5, 5995: 9, 6015: 13, 6035: 17, 6055: 21, 6075: 25,
+        6095: 29, 6115: 33, 6135: 37, 6155: 41, 6175: 45, 6195: 49, 6215: 53,
+        6235: 57, 6255: 61, 6275: 65, 6295: 69, 6315: 73, 6335: 77, 6355: 81,
+        6375: 85, 6395: 89, 6415: 93, 6435: 97, 6455: 101, 6475: 105, 6495: 109,
+        6515: 113, 6535: 117, 6555: 121, 6575: 125, 6595: 129, 6615: 133,
+        6635: 137, 6655: 141, 6675: 145, 6695: 149, 6715: 153, 6735: 157,
+        6755: 161, 6775: 165, 6795: 169, 6815: 173, 6835: 177, 6855: 181,
+        6875: 185, 6895: 189, 6915: 193, 6935: 197, 6955: 201, 6975: 205,
+        6995: 209, 7015: 213, 7035: 217, 7055: 221, 7075: 225, 7095: 229,
+        7115: 233
     }
 
     def __init__(self, interface: str, target_ip: str, environment_id: str = "unknown"):
@@ -289,20 +305,22 @@ class RSSICollector:
             logger.debug(f"Ping measurement failed: {e}")
             return None, None
 
-    def _freq_to_band(self, frequency_mhz: int) -> Optional[int]:
+    def _freq_to_band(self, frequency_mhz: int) -> Optional[float]:
         """
-        Determine band (2 or 5 GHz) from frequency in MHz.
+        Determine band (2.4, 5, or 6 GHz) from frequency in MHz.
 
         Args:
             frequency_mhz: Frequency in MHz
 
         Returns:
-            2 (2.4 GHz) or 5 (5 GHz), or None if unrecognized
+            2.4, 5, or 6 (GHz), or None if unrecognized
         """
         if 2400 <= frequency_mhz < 2500:
-            return 2
-        elif 5000 <= frequency_mhz < 6000:
+            return 2.4
+        elif 5000 <= frequency_mhz < 5925:
             return 5
+        elif 5925 <= frequency_mhz < 7125:
+            return 6
         return None
 
     def _freq_to_channel(self, frequency_mhz: int) -> Optional[int]:
@@ -319,6 +337,8 @@ class RSSICollector:
             return self.FREQ_TO_CHANNEL_2_4[frequency_mhz]
         elif frequency_mhz in self.FREQ_TO_CHANNEL_5:
             return self.FREQ_TO_CHANNEL_5[frequency_mhz]
+        elif frequency_mhz in self.FREQ_TO_CHANNEL_6:
+            return self.FREQ_TO_CHANNEL_6[frequency_mhz]
         return None
 
     def collect(self) -> Dict[str, any]:

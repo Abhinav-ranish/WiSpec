@@ -3,15 +3,16 @@ feature_extraction.py
 
 Extract hand-crafted features from RSSI and CSI data for material classification.
 
-This module extracts both single-band and dual-band features:
+This module extracts single-band, dual-band, and tri-band features:
 
 RSSI Features (per material phase):
-  - mean_rssi_2g, std_rssi_2g, mean_rssi_5g, std_rssi_5g
-  - mean_attenuation_2g, mean_attenuation_5g
-  - delta_attenuation (5g - 2g)
-  - ratio_attenuation (5g / 2g)
-  - mean_snr_2g, mean_snr_5g, delta_snr
-  - mean_ping_2g, mean_ping_5g
+  - mean_rssi_2g, std_rssi_2g, mean_rssi_5g, std_rssi_5g, mean_rssi_6g, std_rssi_6g
+  - mean_attenuation_2g, mean_attenuation_5g, mean_attenuation_6g
+  - delta_attenuation for all band pairs (5g-2g, 6g-2g, 6g-5g)
+  - ratio_attenuation for all band pairs
+  - spectral_curvature (tri-band non-linearity)
+  - mean_snr_2g, mean_snr_5g, mean_snr_6g, delta_snr pairs
+  - mean_ping_2g, mean_ping_5g, mean_ping_6g
 
 CSI Features (per material phase, per band):
   - mean_amplitude_across_subcarriers
@@ -22,8 +23,9 @@ CSI Features (per material phase, per band):
   - rms_delay_spread_estimate
   - frequency_selectivity
 
-Dual-band CSI Features:
-  - Delta and ratio of each CSI feature (5g - 2g, 5g / 2g)
+Tri-band CSI Features:
+  - Delta and ratio of each CSI feature for all band pairs
+  - Spectral curvature features
   - Concatenated feature vector
 
 Output:
@@ -123,6 +125,22 @@ class RSSIFeatureExtractor:
                 features_row['snr_mean_5g'] = np.nan
                 features_row['snr_std_5g'] = np.nan
 
+            # 6 GHz features
+            row_6g = group_df[group_df['band'] == '6GHz']
+            if len(row_6g) > 0:
+                row_6g = row_6g.iloc[0]
+                features_row['rssi_mean_6g'] = row_6g['rssi_mean']
+                features_row['rssi_std_6g'] = row_6g['rssi_std']
+                features_row['rssi_median_6g'] = row_6g['rssi_median']
+                features_row['snr_mean_6g'] = row_6g['snr_mean']
+                features_row['snr_std_6g'] = row_6g['snr_std']
+            else:
+                features_row['rssi_mean_6g'] = np.nan
+                features_row['rssi_std_6g'] = np.nan
+                features_row['rssi_median_6g'] = np.nan
+                features_row['snr_mean_6g'] = np.nan
+                features_row['snr_std_6g'] = np.nan
+
             feature_list.append(features_row)
 
         # Convert to DataFrame for easier manipulation
@@ -133,6 +151,19 @@ class RSSIFeatureExtractor:
             features_df['delta_rssi_5g_minus_2g'] = features_df['rssi_mean_5g'] - features_df['rssi_mean_2g']
             features_df['ratio_rssi_5g_div_2g'] = features_df['rssi_mean_5g'] / features_df['rssi_mean_2g']
             features_df['delta_snr_5g_minus_2g'] = features_df['snr_mean_5g'] - features_df['snr_mean_2g']
+
+        # Compute tri-band differences if 6 GHz data present
+        if 'rssi_mean_6g' in features_df.columns and not features_df['rssi_mean_6g'].isna().all():
+            features_df['delta_rssi_6g_minus_2g'] = features_df['rssi_mean_6g'] - features_df['rssi_mean_2g']
+            features_df['delta_rssi_6g_minus_5g'] = features_df['rssi_mean_6g'] - features_df['rssi_mean_5g']
+            features_df['ratio_rssi_6g_div_2g'] = features_df['rssi_mean_6g'] / features_df['rssi_mean_2g']
+            features_df['ratio_rssi_6g_div_5g'] = features_df['rssi_mean_6g'] / features_df['rssi_mean_5g']
+            features_df['delta_snr_6g_minus_2g'] = features_df['snr_mean_6g'] - features_df['snr_mean_2g']
+            features_df['delta_snr_6g_minus_5g'] = features_df['snr_mean_6g'] - features_df['snr_mean_5g']
+            # Spectral curvature: measures non-linearity of RSSI across the 3 bands
+            features_df['spectral_curvature'] = (
+                features_df['delta_rssi_6g_minus_5g'] - features_df['delta_rssi_5g_minus_2g']
+            )
 
         # If dual_band_df provided, use computed attenuation features
         if dual_band_df is not None and len(dual_band_df) > 0:
@@ -306,77 +337,111 @@ class CSIFeatureExtractor:
         return features_df, feature_cols
 
 
-class DualBandFeatureExtractor:
+class TriBandFeatureExtractor:
     """
-    Combine single-band RSSI and CSI features into dual-band feature vectors.
+    Combine single-band RSSI and CSI features into tri-band feature vectors.
+    Backward-compatible: works with 2 or 3 bands.
     """
 
     def __init__(self):
         self.features_2g = None
         self.features_5g = None
+        self.features_6g = None
         self.combined_features = None
         self.feature_names = None
 
-    def combine_dual_band_features(self,
-                                    features_2g: np.ndarray,
-                                    features_5g: np.ndarray,
-                                    feature_names_2g: List[str],
-                                    feature_names_5g: List[str]) -> Tuple[np.ndarray, List[str]]:
+    def combine_multi_band_features(self,
+                                     features_2g: np.ndarray,
+                                     features_5g: np.ndarray,
+                                     feature_names_2g: List[str],
+                                     feature_names_5g: List[str],
+                                     features_6g: Optional[np.ndarray] = None,
+                                     feature_names_6g: Optional[List[str]] = None) -> Tuple[np.ndarray, List[str]]:
         """
-        Combine 2.4 GHz and 5 GHz features into a single dual-band feature vector.
+        Combine 2.4 GHz, 5 GHz, and optionally 6 GHz features into a single feature vector.
 
         Creates:
-          - 2.4 GHz features
-          - 5 GHz features
-          - Delta features (5g - 2g)
-          - Ratio features (5g / 2g, safe division)
+          - Per-band features (2.4, 5, and optionally 6 GHz)
+          - Delta features for all band pairs
+          - Ratio features for all band pairs (safe division)
+          - Spectral curvature (if 6 GHz present)
 
         Args:
             features_2g: Feature matrix (n_samples, n_features_2g)
             features_5g: Feature matrix (n_samples, n_features_5g)
             feature_names_2g: List of 2.4 GHz feature names
             feature_names_5g: List of 5 GHz feature names
+            features_6g: Optional 6 GHz feature matrix (n_samples, n_features_6g)
+            feature_names_6g: Optional list of 6 GHz feature names
 
         Returns:
             Tuple of (combined_feature_matrix, combined_feature_names)
         """
-        logger.info("Combining dual-band features...")
+        has_6g = features_6g is not None and feature_names_6g is not None
+        band_label = "tri-band" if has_6g else "dual-band"
+        logger.info(f"Combining {band_label} features...")
 
         if features_2g.shape[0] != features_5g.shape[0]:
             logger.error("2.4 GHz and 5 GHz features have different sample counts")
             return np.array([]), []
 
-        n_samples = features_2g.shape[0]
+        if has_6g and features_6g.shape[0] != features_2g.shape[0]:
+            logger.error("6 GHz features have different sample count than 2.4/5 GHz")
+            return np.array([]), []
 
-        # Collect feature columns
         combined_cols = {}
 
         # 2.4 GHz features with suffix
         for j, name in enumerate(feature_names_2g):
-            col_name = f"{name}_2g"
-            combined_cols[col_name] = features_2g[:, j]
+            combined_cols[f"{name}_2g"] = features_2g[:, j]
 
         # 5 GHz features with suffix
         for j, name in enumerate(feature_names_5g):
-            col_name = f"{name}_5g"
-            combined_cols[col_name] = features_5g[:, j]
+            combined_cols[f"{name}_5g"] = features_5g[:, j]
+
+        # 6 GHz features with suffix
+        if has_6g:
+            for j, name in enumerate(feature_names_6g):
+                combined_cols[f"{name}_6g"] = features_6g[:, j]
 
         # Delta features (5g - 2g)
-        # Match features by base name
         for j, name in enumerate(feature_names_2g):
             if j < features_5g.shape[1]:
-                col_name = f"delta_{name}_5g_minus_2g"
-                combined_cols[col_name] = features_5g[:, j] - features_2g[:, j]
+                combined_cols[f"delta_{name}_5g_minus_2g"] = features_5g[:, j] - features_2g[:, j]
 
         # Ratio features (5g / 2g) with safe division
         for j, name in enumerate(feature_names_2g):
             if j < features_5g.shape[1]:
-                col_name = f"ratio_{name}_5g_div_2g"
-                # Safe division: avoid division by zero
                 with np.errstate(divide='ignore', invalid='ignore'):
                     ratio = features_5g[:, j] / features_2g[:, j]
                     ratio = np.where(np.isfinite(ratio), ratio, np.nan)
-                combined_cols[col_name] = ratio
+                combined_cols[f"ratio_{name}_5g_div_2g"] = ratio
+
+        # 6 GHz differential features
+        if has_6g:
+            # Delta features (6g - 2g)
+            for j, name in enumerate(feature_names_2g):
+                if j < features_6g.shape[1]:
+                    combined_cols[f"delta_{name}_6g_minus_2g"] = features_6g[:, j] - features_2g[:, j]
+
+            # Delta features (6g - 5g)
+            for j, name in enumerate(feature_names_5g):
+                if j < features_6g.shape[1]:
+                    combined_cols[f"delta_{name}_6g_minus_5g"] = features_6g[:, j] - features_5g[:, j]
+
+            # Ratio features (6g / 2g)
+            for j, name in enumerate(feature_names_2g):
+                if j < features_6g.shape[1]:
+                    with np.errstate(divide='ignore', invalid='ignore'):
+                        ratio = features_6g[:, j] / features_2g[:, j]
+                        ratio = np.where(np.isfinite(ratio), ratio, np.nan)
+                    combined_cols[f"ratio_{name}_6g_div_2g"] = ratio
+
+            # Spectral curvature features (non-linearity across 3 frequency points)
+            for j, name in enumerate(feature_names_2g):
+                if j < min(features_5g.shape[1], features_6g.shape[1]):
+                    curvature = (features_6g[:, j] - features_5g[:, j]) - (features_5g[:, j] - features_2g[:, j])
+                    combined_cols[f"curvature_{name}"] = curvature
 
         # Create combined feature matrix
         feature_names_combined = list(combined_cols.keys())
@@ -384,12 +449,17 @@ class DualBandFeatureExtractor:
 
         self.features_2g = features_2g
         self.features_5g = features_5g
+        self.features_6g = features_6g
         self.combined_features = X_combined
         self.feature_names = feature_names_combined
 
-        logger.info(f"Created dual-band feature vector with {len(feature_names_combined)} features")
+        logger.info(f"Created {band_label} feature vector with {len(feature_names_combined)} features")
 
         return X_combined, feature_names_combined
+
+
+# Backward compatibility alias
+DualBandFeatureExtractor = TriBandFeatureExtractor
 
 
 class FeatureMatrix:

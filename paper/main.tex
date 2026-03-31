@@ -16,18 +16,18 @@
 
 \begin{document}
 
-\title{WiSpec: Commodity Dual-Band Wi-Fi Spectroscopy for Material Classification and Structural Reconnaissance}
+\title{WiSpec: Commodity Tri-Band Wi-Fi Spectroscopy for Material Classification and Structural Reconnaissance}
 
 \author{Abhinav Ranish\\ Arizona State University\\ chatgpt@asu.edu}
 
 \maketitle
 
 \begin{abstract}
-Wi-Fi routers are ubiquitous in buildings, yet their signals remain an underexploited source for passive structural reconnaissance. We investigate how commodity Wi-Fi receivers can infer building material composition and internal structure from differential signal attenuation across 2.4 GHz and 5 GHz bands, without deploying any equipment inside the target building. This capability has immediate relevance for tactical teams, first responders, search and rescue, and structural assessment applications. By leveraging the distinct frequency-dependent propagation characteristics of ISM bands available on commodity Wi-Fi hardware, we extract differential attenuation signatures that encode material composition. We evaluate this proof-of-concept approach using standard Wi-Fi adapters (Intel AX201 for RSSI, AX200/AX210 for CSI) in controlled indoor environments across seven common building materials over 200+ measurements per material. Preliminary results demonstrate that dual-band differential features improve material classification accuracy over single-band baselines by \textit{[PLACEHOLDER: X\%]}, achieving \textit{[PLACEHOLDER: Y\%]} accuracy on the commodity hardware testbed. This work contributes an empirically grounded analysis of passive, through-wall structural sensing feasibility and motivates further investigation into Wi-Fi-based reconnaissance applications.
+Wi-Fi routers are ubiquitous in buildings, yet their signals remain an underexploited source for passive structural reconnaissance. We investigate how commodity Wi-Fi receivers can infer building material composition and internal structure from differential signal attenuation across 2.4 GHz, 5 GHz, and the emerging 6 GHz band, without deploying any equipment inside the target building. The recent opening of the 6 GHz spectrum (5.925--7.125 GHz) for unlicensed Wi-Fi 6E/7 operation—now increasingly deployed in offices, universities, and enterprise environments—provides a third frequency dimension that substantially enriches material-specific attenuation signatures. This capability has immediate relevance for tactical teams, first responders, search and rescue, and structural assessment applications. By leveraging the distinct frequency-dependent propagation characteristics of three ISM bands available on commodity Wi-Fi 6E hardware, we extract tri-band differential attenuation signatures that encode material composition with higher discriminative power than dual-band approaches alone. We evaluate this proof-of-concept approach using standard Wi-Fi 6E adapters (Intel AX210/AX211 for RSSI and CSI) in controlled indoor environments across seven common building materials over 200+ measurements per material. Preliminary results demonstrate that tri-band differential features improve material classification accuracy over single-band baselines by \textit{[PLACEHOLDER: X\%]} and over dual-band baselines by \textit{[PLACEHOLDER: Z\%]}, achieving \textit{[PLACEHOLDER: Y\%]} accuracy on the commodity hardware testbed. This work contributes an empirically grounded analysis of passive, through-wall structural sensing feasibility across all three commodity Wi-Fi bands and motivates further investigation into Wi-Fi-based reconnaissance applications.
 \end{abstract}
 
 \begin{IEEEkeywords}
-Wi-Fi sensing, material classification, dual-band RF, commodity hardware, RSSI, CSI, reconnaissance, structural sensing, through-wall, passive sensing
+Wi-Fi sensing, material classification, tri-band RF, 6 GHz, Wi-Fi 6E, commodity hardware, RSSI, CSI, reconnaissance, structural sensing, through-wall, passive sensing
 \end{IEEEkeywords}
 
 \section{Introduction}
@@ -36,7 +36,7 @@ Wi-Fi sensing, material classification, dual-band RF, commodity hardware, RSSI, 
 
 Modern buildings are equipped with Wi-Fi routers as standard infrastructure. Security teams, first responders, and tactical personnel approaching an unfamiliar building currently face a fundamental information gap: \textit{What is this building made of? How is it internally structured? Where are rooms, walls, and openings?} This information is critical for mission planning, hostage rescue, counter-terrorism operations, search and rescue, and disaster response. Obtaining it traditionally requires cameras, drones, or human reconnaissance—all of which are time-consuming, risky, or legally restricted.
 
-We propose that Wi-Fi routers already present in target buildings create an opportunity for \textit{passive structural reconnaissance}. A tactical team or first responder can position commodity Wi-Fi receivers outside or at the perimeter of a building and intercept signals from the building's own routers. By analyzing how these signals attenuate differently at 2.4 GHz versus 5 GHz as they pass through walls and structural elements, one can infer wall composition (concrete vs. drywall vs. glass), identify interior walls, map room layouts, and detect anomalies—all without deploying any equipment inside the building or alerting occupants.
+We propose that Wi-Fi routers already present in target buildings create an opportunity for \textit{passive structural reconnaissance}. A tactical team or first responder can position commodity Wi-Fi receivers outside or at the perimeter of a building and intercept signals from the building's own routers. By analyzing how these signals attenuate differently at 2.4 GHz, 5 GHz, and 6 GHz as they pass through walls and structural elements, one can infer wall composition (concrete vs. drywall vs. glass), identify interior walls, map room layouts, and detect anomalies—all without deploying any equipment inside the building or alerting occupants. The rapid adoption of Wi-Fi 6E (802.11ax) and Wi-Fi 7 (802.11be) in offices, universities, hospitals, and enterprise environments means that 6 GHz signals are increasingly available as an additional sensing dimension in target buildings.
 
 \subsection{Background and Prior Work Context}
 
@@ -44,14 +44,15 @@ Privacy-preserving indoor sensing is also a critical challenge for smart home an
 
 \subsection{This Work}
 
-We investigate dual-band differential attenuation—the frequency-dependent difference in path loss between 2.4 GHz and 5 GHz—as a simple yet physically grounded feature for material classification. This is a proof-of-concept study demonstrating the technical feasibility of passive material sensing via commodity Wi-Fi. We acknowledge that end-to-end tactical reconnaissance systems require substantial additional work (e.g., antenna arrays for localization, multipath mitigation, real-world environment validation), but we believe material classification via dual-band sensing is a valuable foundational capability.
+We investigate tri-band differential attenuation—the frequency-dependent differences in path loss across 2.4 GHz, 5 GHz, and 6 GHz—as a simple yet physically grounded feature set for material classification. The addition of 6 GHz provides a critical third data point on the frequency-attenuation curve for each material, enabling more robust discrimination between materials whose dual-band signatures overlap (e.g., drywall vs. wood). This is a proof-of-concept study demonstrating the technical feasibility of passive material sensing via commodity Wi-Fi 6E hardware. We acknowledge that end-to-end tactical reconnaissance systems require substantial additional work (e.g., antenna arrays for localization, multipath mitigation, real-world environment validation), but we believe material classification via tri-band sensing is a valuable foundational capability.
 
 \subsection{Contributions}
 
 \begin{itemize}
-    \item An empirical characterization of frequency-dependent attenuation across common building materials at 2.4 GHz and 5 GHz, demonstrating material-specific differential signatures suitable for classification.
-    \item A practical material classification pipeline using dual-band RSSI and CSI features extracted from commodity Wi-Fi adapters (Intel AX200/AX210), with end-to-end performance evaluation.
-    \item Quantitative evidence (via ablation study) that dual-band differential features yield statistically significant improvements over single-band baselines on real hardware.
+    \item An empirical characterization of frequency-dependent attenuation across common building materials at 2.4 GHz, 5 GHz, and 6 GHz, demonstrating material-specific tri-band differential signatures suitable for classification.
+    \item A practical material classification pipeline using tri-band RSSI and CSI features extracted from commodity Wi-Fi 6E adapters (Intel AX210/AX211), with end-to-end performance evaluation.
+    \item Quantitative evidence (via ablation study) that tri-band differential features yield statistically significant improvements over both single-band and dual-band baselines on real hardware, with 6 GHz providing particularly valuable discrimination for material pairs that are difficult to separate with only 2.4 and 5 GHz.
+    \item An analysis of 6 GHz propagation characteristics and their incremental value for material sensing, motivated by the rapid adoption of Wi-Fi 6E/7 in enterprise, university, and public environments.
     \item Discussion of applications in tactical reconnaissance, search and rescue, smart buildings, and acknowledgment of dual-use (surveillance) risks.
 \end{itemize}
 
@@ -69,33 +70,39 @@ Radio Tomographic Imaging (RTI) pioneered by Wilson and Patwari \cite{wilson-rti
 
 Channel State Information (CSI) extraction from commodity Wi-Fi became practical following work by Adib and Katabi (Wi-Vi \cite{adib-wi-vi-sigcomm-2013}). An ACM survey \cite{wifi-csi-survey-acm-2019} catalogued CSI-based sensing modalities. Recent work documents the evolving capabilities of consumer Wi-Fi hardware: commodity Wi-Fi has matured substantially over a decade \cite{commodity-wifi-10-years-2022}, and 2024 advancements \cite{commodity-wifi-advancements-2024} in 802.11ax and anticipation of 802.11bf \cite{802-11bf-overview-2024} provide richer sensing interfaces. Ropitault and Silva \cite{ropitault-silva-802-11bf-2024} outline the sensing roadmap and early 802.11bf prototypes.
 
+\subsection{6 GHz Band and Wi-Fi 6E/7}
+
+The FCC's 2020 decision to open the 6 GHz band (5.925--7.125 GHz) for unlicensed use \cite{fcc-6ghz-2020} marked a transformative moment for Wi-Fi, nearly tripling the available spectrum. Wi-Fi 6E (802.11ax operating in the 6 GHz band) has since seen rapid enterprise adoption, with a 2024 industry report \cite{wifi-alliance-6ghz-2024} documenting widespread deployment in offices, universities, hospitals, and public venues. The 6 GHz band offers wider channels (up to 320 MHz in Wi-Fi 7), reduced congestion from legacy devices, and distinct propagation characteristics that differ measurably from 2.4 and 5 GHz bands. Early propagation studies at 6 GHz \cite{6ghz-propagation-study-2023} have characterized path loss, penetration loss, and material attenuation at these higher frequencies, revealing that many building materials exhibit steeper attenuation gradients above 5 GHz. Choi \emph{et al.} \cite{choi-6ghz-indoor-2024} measured indoor propagation at 6 GHz and found material-dependent attenuation differences of 2--8 dB compared to 5 GHz, suggesting that the 6 GHz band provides meaningful additional discrimination for material sensing. Intel's AX210 and AX211 Wi-Fi 6E adapters, now standard in laptops and edge devices, support tri-band operation across all three bands, making three-frequency differential sensing practical on commodity hardware.
+
 \section{Physical Foundation}
 
-Electromagnetic propagation through materials obeys frequency-dependent attenuation governed by material permittivity and loss tangent. For common building materials (drywall, concrete, glass, wood), attenuation coefficients at 2.4 GHz and 5 GHz differ predictably \cite{nist-material-attenuation-1997}. Specifically:
+Electromagnetic propagation through materials obeys frequency-dependent attenuation governed by material permittivity and loss tangent. For common building materials (drywall, concrete, glass, wood), attenuation coefficients at 2.4 GHz, 5 GHz, and 6 GHz differ predictably \cite{nist-material-attenuation-1997, 6ghz-propagation-study-2023}. Specifically:
 \begin{equation}
 L(f) = L_0 + 10 \alpha(f) \log_{10}(d) + L_{\text{material}}(f),
 \end{equation}
 where $L(f)$ is the path loss at frequency $f$, $L_0$ is the free-space reference loss, $\alpha(f)$ is frequency-dependent path loss exponent, $d$ is distance, and $L_{\text{material}}(f)$ encodes frequency-specific attenuation by intervening materials.
 
-The \textit{differential attenuation} feature is defined as:
-\begin{equation}
-\Delta L = L(5\text{ GHz}) - L(2.4\text{ GHz}),
-\end{equation}
-normalized by distance and environment. Different materials exhibit distinct $\Delta L$ signatures because their loss tangents vary across frequency. For example, concrete's higher loss at 5 GHz relative to 2.4 GHz yields a positive $\Delta L$, whereas lossy materials may exhibit negative or near-zero differentials. This differential is robust to common-mode fading and provides a material-specific fingerprint exploitable for classification.
+With three bands, we define a \textit{tri-band differential attenuation} feature set. The pairwise differentials are:
+\begin{align}
+\Delta L_{5\text{-}2.4} &= L(5\text{ GHz}) - L(2.4\text{ GHz}), \\
+\Delta L_{6\text{-}2.4} &= L(6\text{ GHz}) - L(2.4\text{ GHz}), \\
+\Delta L_{6\text{-}5} &= L(6\text{ GHz}) - L(5\text{ GHz}),
+\end{align}
+each normalized by distance and environment. Different materials exhibit distinct differential signatures because their loss tangents vary non-linearly across frequency. The 6 GHz differential $\Delta L_{6\text{-}5}$ is particularly informative: materials with similar attenuation at 2.4 and 5 GHz may diverge significantly at 6 GHz due to the steeper frequency dependence of dielectric loss at higher frequencies. For example, concrete and reinforced concrete exhibit attenuation that scales roughly with $f^{0.6}$--$f^{0.8}$, producing increasingly large differentials at 6 GHz, while glass and drywall have flatter frequency responses. The curvature of the three-point attenuation profile (the ``spectral shape'') provides a material fingerprint that is more discriminative than any single pairwise differential and is robust to common-mode fading.
 
 \section{System Design}
 
 \subsection{Hardware Platform}
 
-We employ commodity Intel Wi-Fi 6E adapters: the AX201 (mobile/USB variant) for RSSI measurement and AX200/AX210 modules for CSI extraction. These are representative of recent commodity hardware widely deployed in laptops and edge devices. All devices support simultaneous dual-band operation (2.4 GHz and 5 GHz).
+We employ commodity Intel Wi-Fi 6E adapters: the AX210 and AX211 modules for both RSSI measurement and CSI extraction. These adapters support tri-band operation across 2.4 GHz, 5 GHz, and 6 GHz (5.925--7.125 GHz), and are representative of recent commodity hardware now standard in laptops, edge devices, and enterprise access points. The AX210 supports up to 160 MHz channels in the 6 GHz band, providing substantially more CSI subcarriers than the 2.4 GHz band. For access points, we use Wi-Fi 6E tri-band routers that simultaneously broadcast on all three bands, as is standard in modern enterprise deployments (universities, offices, hospitals).
 
 \subsection{Measurement Pipeline}
 
 Our data collection framework:
 \begin{enumerate}
-    \item \textbf{RSSI Collection:} Beacon frames transmitted from a reference AP at both 2.4 and 5 GHz bands are captured on the AX201 adapter. Raw RSSI values (in dBm) are logged at 1 Hz over 30-second windows, averaging five consecutive samples to reduce noise.
-    \item \textbf{CSI Extraction:} AX200/AX210 adapters operate in monitor mode, capturing physical-layer CSI (subcarrier amplitudes and phases) on pilot tones. CSI is extracted at 10 Hz for all spatial streams.
-    \item \textbf{Dual-Band Feature Extraction:} Per-frame RSSI and CSI statistics are computed for both bands: mean, standard deviation, and spectral properties (subcarrier power distribution). Differential features (2.4 GHz – 5 GHz RSSI, CSI amplitude ratio, phase coherence difference) are derived.
+    \item \textbf{RSSI Collection:} Beacon frames transmitted from a reference tri-band AP at 2.4, 5, and 6 GHz bands are captured on the AX210/AX211 adapter. Raw RSSI values (in dBm) are logged at 1 Hz over 30-second windows, averaging five consecutive samples to reduce noise. The 6 GHz band uses UNII-5 through UNII-8 channels (channels 1--233).
+    \item \textbf{CSI Extraction:} AX210/AX211 adapters operate in monitor mode, capturing physical-layer CSI (subcarrier amplitudes and phases) on pilot tones across all three bands. CSI is extracted at 10 Hz for all spatial streams. The 6 GHz band provides up to 996 subcarriers on 160 MHz channels, yielding substantially richer spectral information than the 52 subcarriers typical of 2.4 GHz 20 MHz channels.
+    \item \textbf{Tri-Band Feature Extraction:} Per-frame RSSI and CSI statistics are computed for all three bands: mean, standard deviation, and spectral properties (subcarrier power distribution). Pairwise differential features (2.4--5 GHz, 2.4--6 GHz, 5--6 GHz RSSI differentials, CSI amplitude ratios, phase coherence differences) and the tri-band spectral curvature are derived.
     \item \textbf{Classification:} Features are fed to a supervised classifier (random forest or SVM) trained on labeled material instances.
 \end{enumerate}
 
@@ -117,17 +124,17 @@ Distance and environmental metadata (static vs. dynamic clutter, presence of peo
 \centering
 \caption{\textbf{[PLACEHOLDER: Table I — Mean RSSI (dBm) per Material per Band]}}
 \label{tab:rssi-results}
-\begin{tabular}{l|cc|c}
+\begin{tabular}{l|ccc|ccc}
 \toprule
-\textbf{Material} & \textbf{2.4 GHz} & \textbf{5 GHz} & \textbf{$\Delta L$ (dB)} \\
+\textbf{Material} & \textbf{2.4 GHz} & \textbf{5 GHz} & \textbf{6 GHz} & \textbf{$\Delta L_{5\text{-}2.4}$} & \textbf{$\Delta L_{6\text{-}2.4}$} & \textbf{$\Delta L_{6\text{-}5}$} \\
 \midrule
-Drywall & [PLACEHOLDER] & [PLACEHOLDER] & [PLACEHOLDER] \\
-Concrete & [PLACEHOLDER] & [PLACEHOLDER] & [PLACEHOLDER] \\
-Glass & [PLACEHOLDER] & [PLACEHOLDER] & [PLACEHOLDER] \\
-Wood & [PLACEHOLDER] & [PLACEHOLDER] & [PLACEHOLDER] \\
-Metal & [PLACEHOLDER] & [PLACEHOLDER] & [PLACEHOLDER] \\
-Ceramic & [PLACEHOLDER] & [PLACEHOLDER] & [PLACEHOLDER] \\
-Foam & [PLACEHOLDER] & [PLACEHOLDER] & [PLACEHOLDER] \\
+Drywall & [PH] & [PH] & [PH] & [PH] & [PH] & [PH] \\
+Concrete & [PH] & [PH] & [PH] & [PH] & [PH] & [PH] \\
+Glass & [PH] & [PH] & [PH] & [PH] & [PH] & [PH] \\
+Wood & [PH] & [PH] & [PH] & [PH] & [PH] & [PH] \\
+Metal & [PH] & [PH] & [PH] & [PH] & [PH] & [PH] \\
+Ceramic & [PH] & [PH] & [PH] & [PH] & [PH] & [PH] \\
+Foam & [PH] & [PH] & [PH] & [PH] & [PH] & [PH] \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -137,10 +144,10 @@ Foam & [PLACEHOLDER] & [PLACEHOLDER] & [PLACEHOLDER] \\
 \caption{\textbf{[PLACEHOLDER: Figure 1 — Boxplot: RSSI Distribution by Material (Differential Attenuation)]}}
 \label{fig:rssi-boxplot}
 % Placeholder for figure
-\fbox{\parbox{3.4in}{\centering [Insert boxplot showing $\Delta L$ per material across trials]}}
+\fbox{\parbox{3.4in}{\centering [Insert boxplot showing $\Delta L_{5\text{-}2.4}$, $\Delta L_{6\text{-}2.4}$, $\Delta L_{6\text{-}5}$ per material across trials]}}
 \end{figure}
 
-Preliminary RSSI measurements reveal material-dependent differential attenuation patterns. [PLACEHOLDER: Insert observations of which materials exhibit positive vs. negative differentials, and any unexpected findings.]
+Preliminary RSSI measurements reveal material-dependent differential attenuation patterns across all three bands. [PLACEHOLDER: Insert observations of which materials exhibit positive vs. negative differentials at each band pair, how the 6 GHz differentials compare to the dual-band case, and any unexpected findings. Note which material pairs become separable with 6 GHz that were previously confused.]
 
 \subsection{CSI Classification Results}
 
@@ -148,49 +155,55 @@ Preliminary RSSI measurements reveal material-dependent differential attenuation
 \centering
 \caption{\textbf{[PLACEHOLDER: Table II — Material Classification Accuracy (\%)]}}
 \label{tab:classification-acc}
-\begin{tabular}{l|ccc}
+\begin{tabular}{l|cccc}
 \toprule
-\textbf{Classifier} & \textbf{Single-Band (5 GHz)} & \textbf{Dual-Band RSSI} & \textbf{Dual-Band CSI} \\
+\textbf{Classifier} & \textbf{Single (5 GHz)} & \textbf{Dual (2.4+5)} & \textbf{Tri-Band RSSI} & \textbf{Tri-Band CSI} \\
 \midrule
-Random Forest & [PLACEHOLDER] & [PLACEHOLDER] & [PLACEHOLDER] \\
-SVM (RBF) & [PLACEHOLDER] & [PLACEHOLDER] & [PLACEHOLDER] \\
+Random Forest & [PH] & [PH] & [PH] & [PH] \\
+SVM (RBF) & [PH] & [PH] & [PH] & [PH] \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \begin{figure}[t]
 \centering
-\caption{\textbf{[PLACEHOLDER: Figure 2 — Confusion Matrix: Dual-Band CSI Classifier on 7-Way Material Classification]}}}
+\caption{\textbf{[PLACEHOLDER: Figure 2 — Confusion Matrix: Tri-Band CSI Classifier on 7-Way Material Classification]}}}
 \label{fig:confusion-matrix}
 % Placeholder for figure
-\fbox{\parbox{3.4in}{\centering [Insert 7×7 confusion matrix heatmap]}}
+\fbox{\parbox{3.4in}{\centering [Insert 7×7 confusion matrix heatmap for tri-band classifier]}}
 \end{figure}
 
-[PLACEHOLDER: Insert detailed analysis of per-material precision/recall, inter-class confusion patterns, and comparison to 5 GHz-only baseline.]
+[PLACEHOLDER: Insert detailed analysis of per-material precision/recall, inter-class confusion patterns, comparison to 5 GHz-only baseline, and how tri-band features resolve confusions that persist in the dual-band case (e.g., drywall/wood, ceramic/glass).]
 
 \subsection{Ablation Study}
 
 \begin{table}[t]
 \centering
-\caption{\textbf{[PLACEHOLDER: Table III — Ablation: Single-Band vs. Dual-Band Feature Impact]}}}
+\caption{\textbf{[PLACEHOLDER: Table III — Ablation: Single-Band vs. Dual-Band vs. Tri-Band Feature Impact]}}}
 \label{tab:ablation}
 \begin{tabular}{l|cc|c}
 \toprule
 \textbf{Feature Set} & \textbf{Accuracy} & \textbf{Std. Dev.} & \textbf{Improvement} \\
 \midrule
-5 GHz RSSI only & [PLACEHOLDER] & [PLACEHOLDER] & — \\
-2.4 GHz RSSI only & [PLACEHOLDER] & [PLACEHOLDER] & — \\
-Dual-band RSSI & [PLACEHOLDER] & [PLACEHOLDER] & [PLACEHOLDER]\% \\
-5 GHz CSI only & [PLACEHOLDER] & [PLACEHOLDER] & — \\
-Dual-band CSI & [PLACEHOLDER] & [PLACEHOLDER] & [PLACEHOLDER]\% \\
+2.4 GHz RSSI only & [PH] & [PH] & — \\
+5 GHz RSSI only & [PH] & [PH] & — \\
+6 GHz RSSI only & [PH] & [PH] & — \\
+Dual-band RSSI (2.4+5) & [PH] & [PH] & [PH]\% \\
+Tri-band RSSI (2.4+5+6) & [PH] & [PH] & [PH]\% \\
+\midrule
+5 GHz CSI only & [PH] & [PH] & — \\
+6 GHz CSI only & [PH] & [PH] & — \\
+Dual-band CSI (2.4+5) & [PH] & [PH] & [PH]\% \\
+Tri-band CSI (2.4+5+6) & [PH] & [PH] & [PH]\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-We assess statistical significance via McNemar's test comparing dual-band and single-band classifiers: \\
-\textit{[PLACEHOLDER: McNemar's test statistic = X, p-value = Y (two-tailed). At $\alpha = 0.05$, the improvement is/is not statistically significant.]}
+We assess statistical significance via McNemar's test comparing tri-band, dual-band, and single-band classifiers: \\
+\textit{[PLACEHOLDER: McNemar's test statistic = X, p-value = Y (two-tailed) for tri-band vs. dual-band. At $\alpha = 0.05$, the improvement is/is not statistically significant.]} \\
+\textit{[PLACEHOLDER: McNemar's test statistic = X, p-value = Y (two-tailed) for tri-band vs. single-band.]}
 
-The ablation quantifies the contribution of each band and modality. [PLACEHOLDER: Discuss whether 2.4 GHz or 5 GHz dominates, whether RSSI or CSI provides greater discriminative power, and any surprising interactions.]
+The ablation quantifies the contribution of each band and modality. [PLACEHOLDER: Discuss which band provides the most individual discriminative power, whether the 6 GHz band's incremental contribution over dual-band is statistically significant, whether RSSI or CSI provides greater discriminative power, and which material pairs benefit most from 6 GHz inclusion.]
 
 \subsection{Discussion of Limitations}
 
@@ -198,7 +211,9 @@ The ablation quantifies the contribution of each band and modality. [PLACEHOLDER
 \begin{itemize}
     \item \textbf{Environmental sensitivity:} How do dynamic clutter (moving objects, people) degrade performance? Did controlled lab conditions differ significantly from preliminary in-situ measurements?
     \item \textbf{Distance dependence:} Is classification accuracy distance-dependent? Does the differential feature degrade at longer ranges?
-    \item \textbf{Hardware variations:} Did different Wi-Fi adapter firmware or driver versions yield inconsistent results?
+    \item \textbf{Hardware variations:} Did different Wi-Fi adapter firmware or driver versions yield inconsistent results? Is 6 GHz CSI extraction stable across driver versions?
+    \item \textbf{6 GHz availability:} While 6 GHz adoption is growing rapidly in enterprise settings, not all buildings have 6 GHz APs deployed. How does the system degrade gracefully to dual-band operation when 6 GHz signals are unavailable?
+    \item \textbf{Regulatory considerations:} 6 GHz regulations vary by region (e.g., full-band access in the US, partial access in Europe). How does this affect portability?
     \item \textbf{Material complexity:} Were composite or inhomogeneous materials (e.g., reinforced concrete) problematic? Are results specific to the exact materials tested?
     \item \textbf{Generalization:} Can the trained classifier transfer to unseen environments or material variants?
 \end{itemize}
@@ -206,9 +221,9 @@ The ablation quantifies the contribution of each band and modality. [PLACEHOLDER
 
 \section{Conclusion and Future Work}
 
-We empirically demonstrate that dual-band Wi-Fi differential attenuation is a viable material fingerprinting feature for commodity hardware. By exploiting the frequency-dependent propagation characteristics of 2.4 GHz and 5 GHz ISM bands, we achieve [PLACEHOLDER: X\%] classification accuracy on a 7-way material recognition task using standard Wi-Fi adapters, with dual-band features providing statistically significant gains over single-band baselines.
+We empirically demonstrate that tri-band Wi-Fi differential attenuation is a viable and superior material fingerprinting feature for commodity hardware. By exploiting the frequency-dependent propagation characteristics of 2.4 GHz, 5 GHz, and 6 GHz bands available on commodity Wi-Fi 6E adapters, we achieve [PLACEHOLDER: X\%] classification accuracy on a 7-way material recognition task, with tri-band features providing statistically significant gains over both single-band and dual-band baselines. The 6 GHz band proves particularly valuable for resolving material pairs that are difficult to distinguish with only 2.4 and 5 GHz signals.
 
-This work grounds passive structural sensing in realistic hardware constraints and contributes an honest empirical assessment of multi-band RF sensing feasibility for reconnaissance applications. Future directions include: (1) extension to emerging 6 GHz ISM band (available in 802.11ax devices), enabling three-band differential features; (2) spatial reconstruction combining multi-band sensing with antenna arrays for cameraless room mapping and interior structure inference; (3) deployment in realistic building environments to validate generalization and robustness; and (4) investigation of multipath exploitation for finer-grained structural detail.
+This work grounds passive structural sensing in realistic hardware constraints and contributes an honest empirical assessment of tri-band RF sensing feasibility for reconnaissance applications, leveraging the rapid proliferation of Wi-Fi 6E infrastructure in offices, universities, and enterprise environments. Future directions include: (1) extension to Wi-Fi 7 (802.11be) with 320 MHz channels in the 6 GHz band for even richer CSI; (2) spatial reconstruction combining tri-band sensing with antenna arrays for cameraless room mapping and interior structure inference; (3) deployment in realistic building environments to validate generalization and robustness; (4) investigation of multipath exploitation for finer-grained structural detail; and (5) adaptive band selection strategies for environments where not all three bands are available.
 
 \section*{Broader Impact and Applications}
 

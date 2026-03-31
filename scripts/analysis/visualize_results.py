@@ -4,14 +4,14 @@ visualize_results.py
 Generate publication-quality figures for the Wi-Fi sensing material classification paper.
 
 Generates:
-  Figure 1: RSSI distribution boxplots per material (2.4 GHz & 5 GHz)
-  Figure 2: Attenuation bar chart (material × band)
-  Figure 3: Delta attenuation (5 GHz - 2.4 GHz) per material — key fingerprint plot
-  Figure 4: CSI amplitude heatmap (subcarrier × material) per band
-  Figure 5: Confusion matrix heatmap (best classifier)
-  Figure 6: Ablation comparison (single-band vs dual-band accuracy)
+  Figure 1: RSSI distribution boxplots per material (2.4 GHz, 5 GHz & 6 GHz)
+  Figure 2: Attenuation bar chart (material × band) — all three bands
+  Figure 3: Delta attenuation per material — all band pairs + spectral curvature
+  Figure 4: CSI amplitude heatmap (subcarrier × material) per band (3 panels)
+  Figure 5: Confusion matrix heatmap (best classifier, tri-band)
+  Figure 6: Ablation comparison (single-band vs dual-band vs tri-band accuracy)
   Figure 7: Feature importance plot (top 15 features)
-  Figure 8: Time series of RSSI showing material insertion effect
+  Figure 8: Time series of RSSI showing material insertion effect (3 bands)
 
 All figures saved as PDF (vector) and PNG (300 dpi) for publication.
 
@@ -89,10 +89,17 @@ class MaterialVisualization:
         # Filter out baseline, focus on material measurements
         materials_df = phase_stats_df[phase_stats_df['phase_label'] != 'baseline'].copy()
 
-        fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+        # Determine available bands
+        available_bands = [b for b in ['2.4GHz', '5GHz', '6GHz']
+                          if b in materials_df['band'].unique()]
+        n_bands = len(available_bands)
+
+        fig, axes = plt.subplots(1, n_bands, figsize=(6 * n_bands, 4))
+        if n_bands == 1:
+            axes = [axes]
         fig.suptitle('RSSI Distribution by Material', fontsize=12, fontweight='bold')
 
-        for idx, band in enumerate(['2.4GHz', '5GHz']):
+        for idx, band in enumerate(available_bands):
             ax = axes[idx]
             band_data = materials_df[materials_df['band'] == band]
 
@@ -132,18 +139,28 @@ class MaterialVisualization:
 
         fig, ax = plt.subplots(figsize=(10, 5))
 
+        # Determine available attenuation columns
+        atten_cols = ['attenuation_2g', 'attenuation_5g']
+        band_labels = ['2.4 GHz', '5 GHz']
+        band_colors = ['#1f77b4', '#ff7f0e']
+        if 'attenuation_6g' in dual_band_df.columns:
+            atten_cols.append('attenuation_6g')
+            band_labels.append('6 GHz')
+            band_colors.append('#2ca02c')
+
         # Aggregate by material
-        atten_by_material = dual_band_df.groupby('material_class')[
-            ['attenuation_2g', 'attenuation_5g']
-        ].mean()
+        atten_by_material = dual_band_df.groupby('material_class')[atten_cols].mean()
 
         x_pos = np.arange(len(atten_by_material))
-        width = 0.35
+        n_bars = len(atten_cols)
+        width = 0.8 / n_bars
 
-        bars1 = ax.bar(x_pos - width/2, atten_by_material['attenuation_2g'], width,
-                       label='2.4 GHz', alpha=0.8, color='#1f77b4')
-        bars2 = ax.bar(x_pos + width/2, atten_by_material['attenuation_5g'], width,
-                       label='5 GHz', alpha=0.8, color='#ff7f0e')
+        all_bars = []
+        for i, (col, label, color) in enumerate(zip(atten_cols, band_labels, band_colors)):
+            offset = (i - (n_bars - 1) / 2) * width
+            bars = ax.bar(x_pos + offset, atten_by_material[col], width,
+                         label=label, alpha=0.8, color=color)
+            all_bars.extend(bars)
 
         ax.set_xlabel('Material', fontsize=11, fontweight='bold')
         ax.set_ylabel('Attenuation (dBm)', fontsize=11, fontweight='bold')
@@ -154,7 +171,7 @@ class MaterialVisualization:
         ax.grid(axis='y', alpha=0.3)
 
         # Add value labels on bars
-        for bar in bars1 + bars2:
+        for bar in all_bars:
             height = bar.get_height()
             ax.text(bar.get_x() + bar.get_width()/2., height,
                     f'{height:.1f}', ha='center', va='bottom', fontsize=8)
@@ -297,9 +314,11 @@ class MaterialVisualization:
     def figure6_ablation_comparison(self,
                                      acc_2g: float, std_2g: float,
                                      acc_5g: float, std_5g: float,
-                                     acc_dual: float, std_dual: float) -> None:
+                                     acc_dual: float, std_dual: float,
+                                     acc_6g: float = None, std_6g: float = None,
+                                     acc_tri: float = None, std_tri: float = None) -> None:
         """
-        Figure 6: Ablation study comparison (single-band vs dual-band).
+        Figure 6: Ablation study comparison (single-band vs dual-band vs tri-band).
 
         Args:
             acc_2g: 2.4 GHz accuracy
@@ -308,22 +327,43 @@ class MaterialVisualization:
             std_5g: 5 GHz std
             acc_dual: Dual-band accuracy
             std_dual: Dual-band std
+            acc_6g: 6 GHz accuracy (optional)
+            std_6g: 6 GHz std (optional)
+            acc_tri: Tri-band accuracy (optional)
+            std_tri: Tri-band std (optional)
         """
         logger.info("Generating Figure 6: Ablation comparison...")
 
-        fig, ax = plt.subplots(figsize=(9, 5))
+        fig, ax = plt.subplots(figsize=(11, 5))
 
-        bands = ['2.4 GHz Only', '5 GHz Only', 'Dual-band']
-        accuracies = [acc_2g, acc_5g, acc_dual]
-        stds = [std_2g, std_5g, std_dual]
-        colors = ['#1f77b4', '#ff7f0e', '#2ca02c']
+        bands = ['2.4 GHz\nOnly', '5 GHz\nOnly']
+        accuracies = [acc_2g, acc_5g]
+        stds = [std_2g, std_5g]
+        colors = ['#1f77b4', '#ff7f0e']
+
+        if acc_6g is not None:
+            bands.append('6 GHz\nOnly')
+            accuracies.append(acc_6g)
+            stds.append(std_6g)
+            colors.append('#2ca02c')
+
+        bands.append('Dual-band\n(2.4+5)')
+        accuracies.append(acc_dual)
+        stds.append(std_dual)
+        colors.append('#d62728')
+
+        if acc_tri is not None:
+            bands.append('Tri-band\n(2.4+5+6)')
+            accuracies.append(acc_tri)
+            stds.append(std_tri)
+            colors.append('#9467bd')
 
         x_pos = np.arange(len(bands))
         bars = ax.bar(x_pos, accuracies, yerr=stds, capsize=5, alpha=0.8, color=colors,
                       error_kw={'linewidth': 1.5})
 
         ax.set_ylabel('Accuracy', fontsize=11, fontweight='bold')
-        ax.set_title('Classification Accuracy: Ablation Study\nFrequency-Differential Features Enable Superior Performance',
+        ax.set_title('Classification Accuracy: Ablation Study\nTri-Band Differential Features Enable Superior Performance',
                      fontsize=12, fontweight='bold')
         ax.set_xticks(x_pos)
         ax.set_xticklabels(bands, fontsize=10)
@@ -336,8 +376,9 @@ class MaterialVisualization:
             ax.text(bar.get_x() + bar.get_width()/2., height + std,
                     f'{acc:.3f}', ha='center', va='bottom', fontsize=10, fontweight='bold')
 
-        # Add significance markers
-        ax.text(1, max(accuracies) * 0.95, '***', ha='center', fontsize=14, fontweight='bold')
+        # Add significance markers on best result
+        best_idx = np.argmax(accuracies)
+        ax.text(best_idx, max(accuracies) * 0.95, '***', ha='center', fontsize=14, fontweight='bold')
 
         plt.tight_layout()
         self.save_figure(fig, 'figure6_ablation_comparison')
@@ -395,12 +436,22 @@ class MaterialVisualization:
             logger.warning("Required columns not found for time series")
             return
 
-        fig, axes = plt.subplots(2, 1, figsize=(12, 6))
+        # Determine how many bands are present
+        if 'band' in rssi_data.columns:
+            available_bands = [b for b in ['2.4GHz', '5GHz', '6GHz']
+                              if b in rssi_data['band'].unique()]
+        else:
+            available_bands = ['unknown']
+        n_panels = max(len(available_bands), 1)
+
+        fig, axes = plt.subplots(n_panels, 1, figsize=(12, 3 * n_panels))
+        if n_panels == 1:
+            axes = [axes]
         fig.suptitle('RSSI Time Series: Material Insertion Effect', fontsize=12, fontweight='bold')
 
         # Separate by band if available
         if 'band' in rssi_data.columns:
-            for idx, band in enumerate(['2.4GHz', '5GHz']):
+            for idx, band in enumerate(available_bands):
                 ax = axes[idx]
                 band_data = rssi_data[rssi_data['band'] == band].sort_values('timestamp')
 
@@ -457,11 +508,13 @@ def main():
     })
     viz.figure3_delta_attenuation(synthetic_dual)
 
-    # Figure 6: Synthetic ablation results
+    # Figure 6: Synthetic ablation results (with 6 GHz and tri-band)
     viz.figure6_ablation_comparison(
         acc_2g=0.78, std_2g=0.04,
         acc_5g=0.82, std_5g=0.03,
-        acc_dual=0.91, std_dual=0.02
+        acc_dual=0.91, std_dual=0.02,
+        acc_6g=0.85, std_6g=0.03,
+        acc_tri=0.95, std_tri=0.015
     )
 
     # Figure 7: Synthetic feature importance

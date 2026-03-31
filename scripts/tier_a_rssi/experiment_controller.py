@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 """
-Comprehensive experiment controller for dual-band RSSI measurements.
+Comprehensive experiment controller for tri-band RSSI measurements.
 
 Orchestrates multi-phase Wi-Fi sensing experiments with automatic transitions between
-material samples, support for single-band (2.4 GHz only) and dual-band collection modes,
-and experiment metadata logging.
+material samples, support for single-band, dual-band, and tri-band (2.4 + 5 + 6 GHz)
+collection modes, and experiment metadata logging.
 
 Features:
   - Defines and manages experiment phases (baseline, material tests, etc.)
   - User prompts between phases for manual material placement
   - Launches dual_band_rssi_collector.py subprocess for each phase
-  - Supports both 2.4 GHz and dual-band (2.4 + 5 GHz) collection modes
+  - Supports 2.4 GHz, dual-band (2.4 + 5 GHz), and tri-band (2.4 + 5 + 6 GHz) modes
   - Records comprehensive experiment metadata (date, location, conditions, etc.)
   - Generates experiment manifest JSON with file references
   - Resume capability: allows resuming from a specified phase if interrupted
@@ -38,6 +38,18 @@ Usage:
         --ssid-2-4 MyNetwork-2G \\
         --ssid-5 MyNetwork-5G
 
+    # Run tri-band experiment (2.4 GHz + 5 GHz + 6 GHz)
+    python3 experiment_controller.py \\
+        --experiment-id exp_tri \\
+        --materials "baseline,wood,concrete" \\
+        --duration-per-phase 60 \\
+        --ap-ip 192.168.1.1 \\
+        --ap-interface wlan0 \\
+        --tri-band \\
+        --ssid-2-4 MyNetwork-2G \\
+        --ssid-5 MyNetwork-5G \\
+        --ssid-6 MyNetwork-6G
+
     # Resume from phase 3 (wood)
     python3 experiment_controller.py \\
         --experiment-id exp_001 \\
@@ -58,8 +70,10 @@ Manifest File Schema (JSON):
       "ap_ip": "192.168.1.1",
       "client_interface": "wlan0",
       "dual_band": true,
+      "tri_band": true,
       "ssid_2_4": "MyNetwork-2G",
       "ssid_5": "MyNetwork-5G",
+      "ssid_6": "MyNetwork-6G",
       "phases": [
         {
           "phase_id": 0,
@@ -114,8 +128,10 @@ class ExperimentController:
         client_interface: str = 'wlan0',
         output_dir: Optional[str] = None,
         dual_band: bool = False,
+        tri_band: bool = False,
         ssid_2_4: Optional[str] = None,
         ssid_5: Optional[str] = None,
+        ssid_6: Optional[str] = None,
         environment_id: str = 'unknown',
         location: str = 'unknown',
         distance_cm: Optional[float] = None,
@@ -135,8 +151,10 @@ class ExperimentController:
             client_interface: Client Wi-Fi interface (default: wlan0)
             output_dir: Output directory for CSV and manifest files
             dual_band: Enable dual-band (2.4 + 5 GHz) collection
-            ssid_2_4: SSID for 2.4 GHz band (if dual_band=True)
-            ssid_5: SSID for 5 GHz band (if dual_band=True)
+            tri_band: Enable tri-band (2.4 + 5 + 6 GHz) collection
+            ssid_2_4: SSID for 2.4 GHz band (if dual_band or tri_band=True)
+            ssid_5: SSID for 5 GHz band (if dual_band or tri_band=True)
+            ssid_6: SSID for 6 GHz band (if tri_band=True)
             environment_id: Environment identifier
             location: Physical location description
             distance_cm: Distance between TX and RX in cm
@@ -151,8 +169,10 @@ class ExperimentController:
         self.ap_interface = ap_interface
         self.client_interface = client_interface
         self.dual_band = dual_band
+        self.tri_band = tri_band
         self.ssid_2_4 = ssid_2_4
         self.ssid_5 = ssid_5
+        self.ssid_6 = ssid_6
         self.environment_id = environment_id
         self.location = location
         self.distance_cm = distance_cm
@@ -437,8 +457,10 @@ class ExperimentController:
             'ap_interface': self.ap_interface,
             'client_interface': self.client_interface,
             'dual_band': self.dual_band,
+            'tri_band': self.tri_band,
             'ssid_2_4': self.ssid_2_4,
             'ssid_5': self.ssid_5,
+            'ssid_6': self.ssid_6,
             'environment_id': self.environment_id,
             'phases': self.phases
         }
@@ -469,6 +491,7 @@ class ExperimentController:
         print(f"Distance: {self.distance_cm} cm")
         print(f"AP Model: {self.ap_model}")
         print(f"Dual-Band: {self.dual_band}")
+        print(f"Tri-Band: {self.tri_band}")
         print(f"Phases: {len(self.phases)}")
         for phase in self.phases:
             status = "✓" if phase.get('end_time') else "✗"
@@ -553,12 +576,21 @@ Examples:
         help='Enable dual-band (2.4 + 5 GHz) collection'
     )
     parser.add_argument(
+        '--tri-band',
+        action='store_true',
+        help='Enable tri-band (2.4 + 5 + 6 GHz) collection (requires Wi-Fi 6E hardware)'
+    )
+    parser.add_argument(
         '--ssid-2-4',
-        help='SSID for 2.4 GHz band (required if --dual-band)'
+        help='SSID for 2.4 GHz band (required if --dual-band or --tri-band)'
     )
     parser.add_argument(
         '--ssid-5',
-        help='SSID for 5 GHz band (required if --dual-band)'
+        help='SSID for 5 GHz band (required if --dual-band or --tri-band)'
+    )
+    parser.add_argument(
+        '--ssid-6',
+        help='SSID for 6 GHz band (required if --tri-band)'
     )
     parser.add_argument(
         '--location',
@@ -599,8 +631,13 @@ Examples:
 
     args = parser.parse_args()
 
-    # Validate dual-band args
-    if args.dual_band:
+    # Validate dual-band and tri-band args
+    if args.tri_band:
+        args.dual_band = True  # tri-band implies dual-band
+        if not args.ssid_2_4 or not args.ssid_5 or not args.ssid_6:
+            logger.error("--ssid-2-4, --ssid-5, and --ssid-6 are required when --tri-band is set")
+            sys.exit(1)
+    elif args.dual_band:
         if not args.ssid_2_4 or not args.ssid_5:
             logger.error("--ssid-2-4 and --ssid-5 are required when --dual-band is set")
             sys.exit(1)
@@ -615,8 +652,10 @@ Examples:
         client_interface=args.client_interface,
         output_dir=args.output_dir,
         dual_band=args.dual_band,
+        tri_band=args.tri_band,
         ssid_2_4=args.ssid_2_4,
         ssid_5=args.ssid_5,
+        ssid_6=getattr(args, 'ssid_6', None),
         environment_id=args.environment_id,
         location=args.location,
         distance_cm=args.distance_cm,
