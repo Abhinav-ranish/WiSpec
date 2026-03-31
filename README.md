@@ -1,4 +1,4 @@
-# WiSpec — Commodity Dual-Band Wi-Fi Spectroscopy for Material Classification and Structural Reconnaissance
+# WiSpec — Commodity Tri-Band Wi-Fi 6E Spectroscopy for Material Classification and Structural Reconnaissance
 
 **Author:** Abhinav Ranish — Arizona State University
 **Status:** Active research project
@@ -19,20 +19,18 @@ WiSpec enables several practical applications across different domains:
 ### Your Hardware
 | Device | Chipset | Bands | CSI? | Role |
 |--------|---------|-------|------|------|
-| Xiaomi Mi Router 4C | MT7628AN (OpenWrt) | 2.4 GHz | No | Tier A TX (single-band pilot) |
-| Linux Desktop | Intel AX201 (CNVi) | 2.4 + 5 GHz | **No** (PicoScenes unsupported) | Tier A RX (RSSI dual-band) |
-| **Buy: Intel AX200 M.2** | Intel AX200 | 2.4 + 5 GHz | **Yes** (PicoScenes) | Tier B CSI extraction |
-| **Buy: Intel AX210 M.2** | Intel AX210 | 2.4 + 5 + 6 GHz | **Yes** (PicoScenes) | Tier B+C (adds 6 GHz novelty) |
+| Wi-Fi 6E Tri-Band AP | Any 6E router | 2.4 + 5 + 6 GHz | No | Tier A TX (tri-band beacons) |
+| Linux Desktop | Intel AX210/AX211 | 2.4 + 5 + 6 GHz | **Yes** (PicoScenes) | Tier A RX (RSSI) / Tier B (CSI) |
+| **Recommended: Intel AX210 M.2** | Intel AX210 | 2.4 + 5 + 6 GHz | **Yes** (PicoScenes) | Full tri-band CSI extraction |
 
-### CRITICAL: Your AX201 Cannot Do CSI
-The Intel AX201 uses CNVi architecture (MAC in PCH). PicoScenes only supports standalone AX200/AX210.
-**For $15–20, buy an Intel AX200 or AX210 M.2 card + PCIe adapter.** This is the single most important purchase.
+### CRITICAL: You Need Wi-Fi 6E Hardware
+The research now requires **tri-band (2.4 + 5 + 6 GHz)** support. The Intel AX210/AX211 is the recommended adapter — it supports all three bands with PicoScenes CSI extraction. The 6 GHz band (UNII-5 through UNII-8, 5.925–7.125 GHz) provides up to 996 subcarriers on 160 MHz channels.
 
-Your AX201 is still fully usable for RSSI-based dual-band experiments (Tier A).
+Older dual-band adapters (AX200/AX201) can still be used for 2.4 + 5 GHz experiments but miss the 6 GHz band.
 
-### What You Can Do RIGHT NOW (No New Hardware)
-1. Run Tier A RSSI pilot with your Xiaomi router (2.4 GHz, single-band)
-2. Run Tier A RSSI dual-band pilot using your AX201 (connect to both 2.4 and 5 GHz networks)
+### What You Can Do RIGHT NOW
+1. Run Tier A RSSI tri-band pilot with a Wi-Fi 6E router and AX210/AX211
+2. Run dual-band subset experiments with older hardware
 3. Start the FURI proposal
 
 ## Project Structure
@@ -80,18 +78,19 @@ scp openwrt_rssi_logger.sh root@192.168.1.1:/tmp/
 ssh root@192.168.1.1 '/tmp/openwrt_rssi_logger.sh /tmp/wifi_stats.csv 1 wlan0'
 ```
 
-### Phase 2: Dual-Band RSSI (Current hardware, 2 networks)
+### Phase 2: Tri-Band RSSI (Wi-Fi 6E hardware)
 ```bash
-# Set up your dual-band router with separate SSIDs for 2.4 and 5 GHz
+# Set up your Wi-Fi 6E router with separate SSIDs for 2.4, 5, and 6 GHz
 # Then:
-python3 experiment_controller.py --mode dual_band \
+python3 experiment_controller.py --mode tri_band \
   --interface wlan0 \
   --ssid-2g "YourNetwork_2G" \
   --ssid-5g "YourNetwork_5G" \
+  --ssid-6g "YourNetwork_6G" \
   --target-ip 192.168.1.1
 ```
 
-### Phase 3: CSI (After buying AX200/AX210)
+### Phase 3: CSI (AX210 with PicoScenes)
 ```bash
 # Install PicoScenes first (see tier_b_csi/picoscenes_capture.sh for instructions)
 cd scripts/tier_b_csi
@@ -144,14 +143,14 @@ If you use WiSpec in your research, please cite both the repository and the pape
 
 **Repository:**
 ```
-A. Ranish, "WiSpec: Commodity Dual-Band Wi-Fi Spectroscopy for Material
+A. Ranish, "WiSpec: Commodity Tri-Band Wi-Fi 6E Spectroscopy for Material
 Classification and Structural Reconnaissance," GitHub, 2026.
 https://github.com/abhinav-ranish/WiSpec
 ```
 
 **Paper (update venue/DOI when published):**
 ```
-A. Ranish, "WiSpec: Commodity Dual-Band Wi-Fi Spectroscopy for Material
+A. Ranish, "WiSpec: Commodity Tri-Band Wi-Fi 6E Spectroscopy for Material
 Classification and Structural Reconnaissance," [Venue TBD], 2026.
 ```
 
@@ -159,7 +158,7 @@ Classification and Structural Reconnaissance," [Venue TBD], 2026.
 ```bibtex
 @software{ranish2026wispec,
   author       = {Ranish, Abhinav},
-  title        = {{WiSpec}: Commodity Dual-Band Wi-Fi Spectroscopy for
+  title        = {{WiSpec}: Commodity Tri-Band Wi-Fi 6E Spectroscopy for
                   Material Classification and Structural Reconnaissance},
   year         = {2026},
   url          = {https://github.com/abhinav-ranish/WiSpec},
