@@ -1,0 +1,38 @@
+TODO: Update website to reflect expanded tri-band (6 GHz) research
+======================================================================
+
+The research paper and all analysis scripts have been updated to include
+6 GHz (Wi-Fi 6E) support, expanding from dual-band to tri-band analysis.
+
+Key changes to reflect on the website:
+
+1. TITLE & BRANDING
+   - Update from "Dual-Band" to "Tri-Band" throughout
+   - Mention Wi-Fi 6E / 6 GHz in hero section and abstract
+
+2. TECHNICAL CONTENT
+   - Paper now covers 2.4 GHz, 5 GHz, AND 6 GHz bands
+   - New tri-band differential attenuation features (3 pairwise differentials)
+   - New "spectral curvature" metric (non-linearity across 3 frequency points)
+   - Ablation study now includes: single-band (2.4, 5, 6), dual-band, tri-band
+   - 6 GHz provides better discrimination for material pairs that overlap at 2.4/5
+
+3. HARDWARE UPDATES
+   - Updated from AX200/AX201 to AX210/AX211 (Wi-Fi 6E adapters)
+   - Tri-band AP requirement (Wi-Fi 6E router)
+   - 6 GHz band: UNII-5 through UNII-8 channels (5.925 - 7.125 GHz)
+
+4. MOTIVATION / RELEVANCE
+   - 6 GHz is increasingly deployed in offices, universities, hospitals
+   - Enterprise Wi-Fi 6E adoption is accelerating
+   - More available spectrum = richer sensing capability
+
+5. UPDATED FILES TO REFERENCE
+   - paper/main.tex — Full tri-band paper
+   - paper/references.bib — New 6 GHz citations added
+   - scripts/tier_a_rssi/dual_band_rssi_collector.py — Now supports 6 GHz channels
+   - scripts/tier_a_rssi/experiment_controller.py — --tri-band and --ssid-6 flags
+   - scripts/analysis/preprocess_rssi.py — Tri-band feature computation
+   - scripts/analysis/feature_extraction.py — TriBandFeatureExtractor class
+   - scripts/analysis/classify_materials.py — Ablation: single vs dual vs tri
+   - scripts/analysis/visualize_results.py — Updated for 3-band figures

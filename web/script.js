@@ -5,7 +5,7 @@
 (function () {
   'use strict';
 
-  // ── Hero Canvas: Dual-Band Wave Visualization ──
+  // ── Hero Canvas: Tri-Band Wave Visualization ──
   const heroCanvas = document.getElementById('heroCanvas');
   if (heroCanvas) {
     const ctx = heroCanvas.getContext('2d');
@@ -97,6 +97,11 @@
       drawWave(center, 28, 2.4, 1.2, '#39ff14', 0.1, 0.8);
       drawWave(center, 15, 3.2, 1.6, '#39ff14', 0.04, 0.6);
 
+      // 6 GHz waves (purple, highest frequency)
+      drawWave(center, 14, 3.8, 1.8, '#a855f7', 0.05, 1.0);
+      drawWave(center, 20, 3.4, 1.5, '#a855f7', 0.08, 0.7);
+      drawWave(center, 10, 4.2, 2.0, '#a855f7', 0.03, 0.5);
+
       // Center glow line
       ctx.beginPath();
       ctx.strokeStyle = 'rgba(0, 229, 255, 0.04)';
@@ -168,12 +173,7 @@
       ctx.stroke();
       ctx.globalAlpha = 1;
 
-      // Frequency label
-      ctx.font = '600 11px "Source Code Pro", monospace';
-      ctx.fillStyle = color;
-      ctx.globalAlpha = 0.7;
-      ctx.fillText(freq + ' GHz', 10, 20);
-      ctx.globalAlpha = 1;
+      // Labels rendered via HTML legend overlay
 
       time += 0.03;
       requestAnimationFrame(draw);
@@ -311,6 +311,7 @@
   function animateCounters(container) {
     container.querySelectorAll('[data-count]').forEach(el => {
       const target = parseInt(el.dataset.count, 10);
+      const prefix = el.dataset.prefix || '';
       const duration = 1800;
       const start = performance.now();
 
@@ -320,7 +321,7 @@
         // Ease out quart
         const eased = 1 - Math.pow(1 - progress, 4);
         const current = Math.round(target * eased);
-        el.textContent = current;
+        el.textContent = prefix + current;
 
         if (progress < 1) {
           requestAnimationFrame(update);

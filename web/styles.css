@@ -20,6 +20,8 @@
   --amber: #ffb020;
   --red: #ff4757;
   --purple: #a855f7;
+  --purple-dim: #a855f733;
+  --purple-glow: #a855f718;
 
   /* Text */
   --text-primary: #e6edf3;
@@ -565,6 +567,22 @@ strong { font-weight: 600; }
   height: 100%;
 }
 
+.pipeline-wave-legend {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 1;
+}
+
+.pipeline-wave-label {
+  font: 600 11px 'Source Code Pro', monospace;
+  opacity: 0.85;
+  text-shadow: 0 0 6px currentColor;
+}
+
 /* Pipeline delta bars */
 .pipeline-delta {
   width: 80%;
@@ -686,6 +704,7 @@ strong { font-weight: 600; }
 
 .formula-24g { color: var(--cyan); }
 .formula-5g { color: var(--green); }
+.formula-6g { color: var(--purple); }
 .formula-delta { color: var(--amber); font-weight: 600; }
 
 .formula-caption {
@@ -796,6 +815,7 @@ strong { font-weight: 600; }
 
 .bar-24g { background: var(--cyan); }
 .bar-5g { background: var(--green); }
+.bar-6g { background: var(--purple); }
 
 .material-bar-val {
   font-family: var(--font-mono);
@@ -905,9 +925,18 @@ strong { font-weight: 600; }
   background: linear-gradient(to top, var(--green), rgba(57, 255, 20, 0.4));
 }
 
+.results-bar-6g {
+  background: linear-gradient(to top, var(--purple), rgba(168, 85, 247, 0.4));
+}
+
 .results-bar-dual {
   background: linear-gradient(to top, var(--amber), rgba(255, 176, 32, 0.5));
   box-shadow: 0 0 24px rgba(255, 176, 32, 0.2);
+}
+
+.results-bar-tri {
+  background: linear-gradient(to top, #e040fb, rgba(224, 64, 251, 0.5));
+  box-shadow: 0 0 24px rgba(224, 64, 251, 0.2);
 }
 
 .results-bar-winner .results-bar::after {
@@ -920,7 +949,7 @@ strong { font-weight: 600; }
   height: 12px;
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
-  border-bottom: 6px solid var(--amber);
+  border-bottom: 6px solid #e040fb;
 }
 
 .results-bar-value {

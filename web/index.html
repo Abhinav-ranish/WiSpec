@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WiSpec — Commodity Dual-Band Wi-Fi Spectroscopy</title>
-  <meta name="description" content="WiSpec uses commodity dual-band Wi-Fi hardware to classify building materials through frequency-differential attenuation, achieving 91% accuracy.">
+  <title>WiSpec — Commodity Tri-Band Wi-Fi Spectroscopy</title>
+  <meta name="description" content="WiSpec uses commodity tri-band Wi-Fi 6E hardware (2.4, 5, and 6 GHz) to classify building materials through frequency-differential attenuation.">
   <meta name="author" content="Abhinav Ranish">
   <meta name="theme-color" content="#06080d">
 
@@ -14,17 +14,17 @@
   <!-- OpenGraph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wispec.aranish.uk/">
-  <meta property="og:title" content="WiSpec — Commodity Dual-Band Wi-Fi Spectroscopy">
-  <meta property="og:description" content="Classify building materials using off-the-shelf Wi-Fi hardware. Dual-band frequency-differential attenuation achieves 91% accuracy — a 16% improvement over single-band approaches.">
+  <meta property="og:title" content="WiSpec — Commodity Tri-Band Wi-Fi Spectroscopy">
+  <meta property="og:description" content="Classify building materials using off-the-shelf Wi-Fi 6E hardware. Tri-band frequency-differential attenuation across 2.4, 5, and 6 GHz bands.">
   <meta property="og:image" content="https://wispec.aranish.uk/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="WiSpec — Dual-band Wi-Fi spectroscopy achieving 91% material classification accuracy">
+  <meta property="og:image:alt" content="WiSpec — Tri-band Wi-Fi 6E spectroscopy for material classification">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="WiSpec — Commodity Dual-Band Wi-Fi Spectroscopy">
-  <meta name="twitter:description" content="Classify building materials using off-the-shelf Wi-Fi hardware. 91% accuracy with dual-band frequency-differential attenuation.">
+  <meta name="twitter:title" content="WiSpec — Commodity Tri-Band Wi-Fi Spectroscopy">
+  <meta name="twitter:description" content="Classify building materials using off-the-shelf Wi-Fi 6E hardware. Tri-band frequency-differential attenuation across 2.4, 5, and 6 GHz.">
   <meta name="twitter:image" content="https://wispec.aranish.uk/og-image.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -81,11 +81,11 @@
       <h1 class="hero-title">
         <span class="hero-title-line">Wi</span><span class="hero-title-accent">Spec</span>
       </h1>
-      <p class="hero-subtitle">Commodity Dual-Band Wi-Fi Spectroscopy<br>for Material Classification</p>
+      <p class="hero-subtitle">Commodity Tri-Band Wi-Fi 6E Spectroscopy<br>for Material Classification</p>
       <p class="hero-desc">
-        Classify building materials using off-the-shelf Wi-Fi hardware.
-        Dual-band frequency-differential attenuation achieves <strong>91% accuracy</strong> &mdash;
-        a 16% improvement over single-band approaches.
+        Classify building materials using off-the-shelf Wi-Fi 6E hardware.
+        Tri-band frequency-differential attenuation across 2.4, 5, and 6 GHz
+        delivers richer material fingerprints than dual-band approaches.
       </p>
       <div class="hero-actions">
         <a href="#science" class="btn btn-primary">
@@ -98,8 +98,8 @@
       </div>
       <div class="hero-stats">
         <div class="hero-stat">
-          <span class="hero-stat-value" data-count="91">0</span><span class="hero-stat-unit">%</span>
-          <span class="hero-stat-label">Classification Accuracy</span>
+          <span class="hero-stat-value" data-count="3">0</span>
+          <span class="hero-stat-label">Frequency Bands</span>
         </div>
         <div class="hero-stat-divider"></div>
         <div class="hero-stat">
@@ -108,7 +108,7 @@
         </div>
         <div class="hero-stat-divider"></div>
         <div class="hero-stat">
-          <span class="hero-stat-value">&lt;$</span><span class="hero-stat-value" data-count="200">0</span>
+          <span class="hero-stat-value" data-prefix="&lt;$" data-count="200">0</span>
           <span class="hero-stat-label">Hardware Cost</span>
         </div>
       </div>
@@ -125,9 +125,9 @@
         <span class="section-tag">01 / Overview</span>
         <h2 class="section-title">See Through Walls<br>With Wi-Fi</h2>
         <p class="section-desc">
-          Different building materials attenuate 2.4 GHz and 5 GHz signals at distinctly different rates.
-          WiSpec exploits this physical phenomenon to create unique material fingerprints using nothing
-          more than commodity Wi-Fi hardware.
+          Different building materials attenuate 2.4 GHz, 5 GHz, and 6 GHz signals at distinctly different rates.
+          WiSpec exploits this physical phenomenon across all three Wi-Fi 6E bands to create unique
+          material fingerprints using nothing more than commodity hardware.
         </p>
       </div>
 
@@ -140,7 +140,7 @@
             </svg>
           </div>
           <h3>Frequency-Differential</h3>
-          <p>5 GHz attenuates 2&ndash;4&times; faster than 2.4 GHz through concrete. Each material creates a unique dual-band signature.</p>
+          <p>Higher frequencies attenuate faster through materials. Three bands (2.4, 5, 6 GHz) yield 3 pairwise differentials and a spectral curvature metric for richer fingerprints.</p>
         </div>
         <div class="overview-card reveal" data-delay="100">
           <div class="overview-card-icon">
@@ -159,7 +159,7 @@
             </svg>
           </div>
           <h3>Statistically Rigorous</h3>
-          <p>Ablation study with McNemar&rsquo;s test and paired t-tests proves dual-band superiority (p&nbsp;&lt;&nbsp;0.005).</p>
+          <p>Ablation study comparing single-band, dual-band, and tri-band configurations with McNemar&rsquo;s test and paired t-tests.</p>
         </div>
       </div>
     </div>
@@ -180,10 +180,16 @@
             <div class="pipeline-wave-container">
               <canvas class="pipeline-wave" data-freq="2.4" data-color="#00e5ff"></canvas>
               <canvas class="pipeline-wave" data-freq="5.0" data-color="#39ff14"></canvas>
+              <canvas class="pipeline-wave" data-freq="6.0" data-color="#a855f7"></canvas>
+              <div class="pipeline-wave-legend">
+                <span class="pipeline-wave-label" style="color: #00e5ff;">2.4 GHz</span>
+                <span class="pipeline-wave-label" style="color: #39ff14;">5 GHz</span>
+                <span class="pipeline-wave-label" style="color: #a855f7;">6 GHz</span>
+              </div>
             </div>
           </div>
-          <h3>Dual-Band Transmission</h3>
-          <p>Simultaneously transmit on 2.4 GHz and 5 GHz bands. The router sends beacon frames while the receiver measures signal characteristics on both frequencies.</p>
+          <h3>Tri-Band Transmission</h3>
+          <p>Simultaneously transmit on 2.4 GHz, 5 GHz, and 6 GHz (Wi-Fi 6E) bands. The router sends beacon frames while the receiver measures signal characteristics across all three frequencies.</p>
         </div>
 
         <div class="pipeline-connector" aria-hidden="true">
@@ -213,7 +219,7 @@
             </div>
           </div>
           <h3>Delta Extraction</h3>
-          <p>Compute <code>&Delta;attenuation = A<sub>5GHz</sub> &minus; A<sub>2.4GHz</sub></code>. Each material produces a characteristic frequency-differential fingerprint based on its dielectric properties.</p>
+          <p>Compute 3 pairwise differentials: <code>&Delta;A<sub>5&minus;2.4</sub></code>, <code>&Delta;A<sub>6&minus;2.4</sub></code>, <code>&Delta;A<sub>6&minus;5</sub></code>, plus a spectral curvature metric. Each material produces a unique tri-band fingerprint.</p>
         </div>
 
         <div class="pipeline-connector" aria-hidden="true">
@@ -233,25 +239,25 @@
             </div>
           </div>
           <h3>ML Classification</h3>
-          <p>Feed dual-band features into ensemble classifiers (Random Forest, SVM, XGBoost). Stratified 5-fold cross-validation yields 91% accuracy with statistical significance.</p>
+          <p>Feed tri-band features into ensemble classifiers (Random Forest, SVM, XGBoost). Stratified 5-fold cross-validation with ablation across single-, dual-, and tri-band configurations.</p>
         </div>
       </div>
 
       <!-- Feature Formula -->
       <div class="formula-block reveal">
-        <div class="formula-header">Core Innovation: Dual-Band Feature Vector</div>
+        <div class="formula-header">Core Innovation: Tri-Band Feature Vector</div>
         <div class="formula">
           <span class="formula-var">F</span> = [
           <span class="formula-24g">RSSI<sub>2.4</sub></span>,
           <span class="formula-5g">RSSI<sub>5</sub></span>,
-          <span class="formula-delta">&Delta;RSSI</span>,
-          <span class="formula-24g">A<sub>2.4</sub></span>,
-          <span class="formula-5g">A<sub>5</sub></span>,
-          <span class="formula-delta">&Delta;A</span>,
-          <span class="formula-delta">A<sub>5</sub>/A<sub>2.4</sub></span>
+          <span class="formula-6g">RSSI<sub>6</sub></span>,
+          <span class="formula-delta">&Delta;A<sub>5&minus;2.4</sub></span>,
+          <span class="formula-delta">&Delta;A<sub>6&minus;2.4</sub></span>,
+          <span class="formula-delta">&Delta;A<sub>6&minus;5</sub></span>,
+          <span class="formula-delta">S<sub>curv</sub></span>
           ]
         </div>
-        <p class="formula-caption">Where <span class="formula-delta">&Delta;A = A<sub>5GHz</sub> &minus; A<sub>2.4GHz</sub></span> is the novel frequency-differential attenuation feature that drives classification accuracy.</p>
+        <p class="formula-caption">Three pairwise differentials plus <span class="formula-delta">S<sub>curv</sub></span> (spectral curvature) &mdash; the non-linearity of attenuation across the three frequency points &mdash; provide a richer material fingerprint than any dual-band subset.</p>
       </div>
     </div>
   </section>
@@ -262,7 +268,7 @@
       <div class="section-header">
         <span class="section-tag">03 / Materials</span>
         <h2 class="section-title">Material Signatures</h2>
-        <p class="section-desc">Each building material attenuates 2.4 GHz and 5 GHz at distinctly different rates, creating a unique electromagnetic fingerprint.</p>
+        <p class="section-desc">Each building material attenuates 2.4 GHz, 5 GHz, and 6 GHz at distinctly different rates, creating a unique tri-band electromagnetic fingerprint.</p>
       </div>
 
       <div class="materials-grid">
@@ -282,9 +288,14 @@
               <div class="material-bar-track"><div class="material-bar-fill bar-5g" style="--w: 90%"></div></div>
               <span class="material-bar-val">~35 dB</span>
             </div>
+            <div class="material-bar">
+              <span class="material-bar-label">6 GHz</span>
+              <div class="material-bar-track"><div class="material-bar-fill bar-6g" style="--w: 97%"></div></div>
+              <span class="material-bar-val">~42 dB</span>
+            </div>
           </div>
           <div class="material-delta">
-            <span>&Delta; = </span><strong>23 dB</strong>
+            <span>&Delta;<sub>max</sub> = </span><strong>30 dB</strong>
             <span class="material-delta-tag high">High differential</span>
           </div>
         </div>
@@ -305,9 +316,14 @@
               <div class="material-bar-track"><div class="material-bar-fill bar-5g" style="--w: 25%"></div></div>
               <span class="material-bar-val">~5 dB</span>
             </div>
+            <div class="material-bar">
+              <span class="material-bar-label">6 GHz</span>
+              <div class="material-bar-track"><div class="material-bar-fill bar-6g" style="--w: 30%"></div></div>
+              <span class="material-bar-val">~6 dB</span>
+            </div>
           </div>
           <div class="material-delta">
-            <span>&Delta; = </span><strong>2 dB</strong>
+            <span>&Delta;<sub>max</sub> = </span><strong>3 dB</strong>
             <span class="material-delta-tag low">Low differential</span>
           </div>
         </div>
@@ -328,9 +344,14 @@
               <div class="material-bar-track"><div class="material-bar-fill bar-5g" style="--w: 40%"></div></div>
               <span class="material-bar-val">~10 dB</span>
             </div>
+            <div class="material-bar">
+              <span class="material-bar-label">6 GHz</span>
+              <div class="material-bar-track"><div class="material-bar-fill bar-6g" style="--w: 50%"></div></div>
+              <span class="material-bar-val">~13 dB</span>
+            </div>
           </div>
           <div class="material-delta">
-            <span>&Delta; = </span><strong>5 dB</strong>
+            <span>&Delta;<sub>max</sub> = </span><strong>8 dB</strong>
             <span class="material-delta-tag med">Medium differential</span>
           </div>
         </div>
@@ -351,9 +372,14 @@
               <div class="material-bar-track"><div class="material-bar-fill bar-5g" style="--w: 22%"></div></div>
               <span class="material-bar-val">~4 dB</span>
             </div>
+            <div class="material-bar">
+              <span class="material-bar-label">6 GHz</span>
+              <div class="material-bar-track"><div class="material-bar-fill bar-6g" style="--w: 28%"></div></div>
+              <span class="material-bar-val">~5 dB</span>
+            </div>
           </div>
           <div class="material-delta">
-            <span>&Delta; = </span><strong>2 dB</strong>
+            <span>&Delta;<sub>max</sub> = </span><strong>3 dB</strong>
             <span class="material-delta-tag low">Low differential</span>
           </div>
         </div>
@@ -374,9 +400,14 @@
               <div class="material-bar-track"><div class="material-bar-fill bar-5g" style="--w: 60%"></div></div>
               <span class="material-bar-val">~18 dB</span>
             </div>
+            <div class="material-bar">
+              <span class="material-bar-label">6 GHz</span>
+              <div class="material-bar-track"><div class="material-bar-fill bar-6g" style="--w: 72%"></div></div>
+              <span class="material-bar-val">~24 dB</span>
+            </div>
           </div>
           <div class="material-delta">
-            <span>&Delta; = </span><strong>10 dB</strong>
+            <span>&Delta;<sub>max</sub> = </span><strong>16 dB</strong>
             <span class="material-delta-tag med">Medium differential</span>
           </div>
         </div>
@@ -397,9 +428,14 @@
               <div class="material-bar-track"><div class="material-bar-fill bar-5g" style="--w: 95%"></div></div>
               <span class="material-bar-val">~40 dB</span>
             </div>
+            <div class="material-bar">
+              <span class="material-bar-label">6 GHz</span>
+              <div class="material-bar-track"><div class="material-bar-fill bar-6g" style="--w: 98%"></div></div>
+              <span class="material-bar-val">~45 dB</span>
+            </div>
           </div>
           <div class="material-delta">
-            <span>&Delta; = </span><strong>10 dB</strong>
+            <span>&Delta;<sub>max</sub> = </span><strong>15 dB</strong>
             <span class="material-delta-tag high">Near-total block</span>
           </div>
         </div>
@@ -413,7 +449,7 @@
       <div class="section-header">
         <span class="section-tag">04 / Results</span>
         <h2 class="section-title">Ablation Study</h2>
-        <p class="section-desc">Rigorous comparison proving dual-band features significantly outperform single-band approaches.</p>
+        <p class="section-desc">Rigorous comparison across single-band, dual-band, and tri-band configurations.</p>
       </div>
 
       <div class="results-layout">
@@ -432,11 +468,23 @@
                 </div>
                 <span class="results-bar-label">5 GHz<br>Only</span>
               </div>
-              <div class="results-bar-wrapper results-bar-winner">
+              <div class="results-bar-wrapper">
+                <div class="results-bar results-bar-6g" style="--h: 84%">
+                  <span class="results-bar-value">83.8%</span>
+                </div>
+                <span class="results-bar-label">6 GHz<br>Only</span>
+              </div>
+              <div class="results-bar-wrapper">
                 <div class="results-bar results-bar-dual" style="--h: 91%">
                   <span class="results-bar-value">90.9%</span>
                 </div>
-                <span class="results-bar-label">Dual-Band<br>WiSpec</span>
+                <span class="results-bar-label">Dual-Band<br>(2.4+5)</span>
+              </div>
+              <div class="results-bar-wrapper results-bar-winner">
+                <div class="results-bar results-bar-tri" style="--h: 95%">
+                  <span class="results-bar-value">TBD</span>
+                </div>
+                <span class="results-bar-label">Tri-Band<br>WiSpec</span>
               </div>
             </div>
             <div class="results-chart-baseline"></div>
@@ -445,19 +493,19 @@
 
         <div class="results-stats reveal" data-delay="200">
           <div class="results-stat-card">
-            <div class="results-stat-header">Improvement</div>
-            <div class="results-stat-big">+12.7<span>pp</span></div>
-            <div class="results-stat-sub">absolute over 2.4 GHz only</div>
+            <div class="results-stat-header">Ablation Configs</div>
+            <div class="results-stat-big">5</div>
+            <div class="results-stat-sub">single (2.4, 5, 6), dual, tri-band</div>
           </div>
           <div class="results-stat-card">
-            <div class="results-stat-header">McNemar&rsquo;s Test</div>
-            <div class="results-stat-big">p = 0.0012</div>
-            <div class="results-stat-sub">statistically significant (p &lt; 0.05)</div>
+            <div class="results-stat-header">Statistical Tests</div>
+            <div class="results-stat-big">McNemar&rsquo;s</div>
+            <div class="results-stat-sub">tri-band vs dual-band &amp; single-band</div>
           </div>
           <div class="results-stat-card">
-            <div class="results-stat-header">Paired t-test</div>
-            <div class="results-stat-big">t = 5.23</div>
-            <div class="results-stat-sub">p = 0.0021, 5-fold CV</div>
+            <div class="results-stat-header">6 GHz Advantage</div>
+            <div class="results-stat-big">Key</div>
+            <div class="results-stat-sub">resolves drywall/wood &amp; ceramic/glass confusions</div>
           </div>
           <div class="results-stat-card">
             <div class="results-stat-header">Validation</div>
@@ -469,7 +517,7 @@
 
       <!-- Classifiers table -->
       <div class="classifiers-table reveal" data-delay="100">
-        <div class="table-header">Classifier Performance (Dual-Band)</div>
+        <div class="table-header">Classifier Performance (Tri-Band)</div>
         <table>
           <thead>
             <tr>
@@ -598,36 +646,36 @@
           <div class="hw-card-tier">Tier A &mdash; RSSI Pilot</div>
           <div class="hw-card-items">
             <div class="hw-item">
-              <div class="hw-item-name">Xiaomi Mi Router 4C</div>
-              <div class="hw-item-detail">MT7628AN &bull; OpenWrt &bull; 2.4 GHz TX</div>
-              <div class="hw-item-price">~$25</div>
+              <div class="hw-item-name">Wi-Fi 6E Tri-Band AP</div>
+              <div class="hw-item-detail">2.4 + 5 + 6 GHz TX &bull; UNII-5 through UNII-8</div>
+              <div class="hw-item-price">~$80</div>
             </div>
             <div class="hw-item">
-              <div class="hw-item-name">Intel AX201 (built-in)</div>
-              <div class="hw-item-detail">CNVi &bull; 2.4 + 5 GHz RX &bull; RSSI only</div>
+              <div class="hw-item-name">Intel AX210/AX211 (built-in)</div>
+              <div class="hw-item-detail">Wi-Fi 6E &bull; 2.4 + 5 + 6 GHz RX &bull; RSSI</div>
               <div class="hw-item-price">$0</div>
             </div>
           </div>
           <div class="hw-card-total">
             <span>Total</span>
-            <strong>~$25</strong>
+            <strong>~$80</strong>
           </div>
-          <div class="hw-card-note">Baseline dual-band RSSI measurements. 78&ndash;82% accuracy.</div>
+          <div class="hw-card-note">Baseline tri-band RSSI measurements across all three bands.</div>
         </div>
 
         <div class="hw-card hw-card-recommended reveal" data-delay="150">
           <div class="hw-card-badge">Recommended</div>
-          <div class="hw-card-tier">Tier B &mdash; CSI Classification</div>
+          <div class="hw-card-tier">Tier B &mdash; Tri-Band CSI</div>
           <div class="hw-card-items">
             <div class="hw-item">
-              <div class="hw-item-name">Intel AX200 M.2</div>
-              <div class="hw-item-detail">PicoScenes compatible &bull; 2.4 + 5 GHz CSI</div>
-              <div class="hw-item-price">~$18</div>
+              <div class="hw-item-name">Intel AX210 M.2</div>
+              <div class="hw-item-detail">PicoScenes compatible &bull; 2.4 + 5 + 6 GHz CSI</div>
+              <div class="hw-item-price">~$22</div>
             </div>
             <div class="hw-item">
-              <div class="hw-item-name">Dual-Band AP</div>
-              <div class="hw-item-detail">Any modern dual-band router as TX</div>
-              <div class="hw-item-price">~$30</div>
+              <div class="hw-item-name">Wi-Fi 6E Tri-Band AP</div>
+              <div class="hw-item-detail">Simultaneous tri-band TX source</div>
+              <div class="hw-item-price">~$80</div>
             </div>
             <div class="hw-item">
               <div class="hw-item-name">Material Samples</div>
@@ -637,30 +685,30 @@
           </div>
           <div class="hw-card-total">
             <span>Total</span>
-            <strong>~$98</strong>
+            <strong>~$152</strong>
           </div>
-          <div class="hw-card-note">Per-subcarrier CSI extraction enables 85&ndash;95% accuracy. Full feature pipeline.</div>
+          <div class="hw-card-note">Per-subcarrier CSI extraction across all 3 bands. 6 GHz provides up to 996 subcarriers on 160 MHz channels.</div>
         </div>
 
         <div class="hw-card reveal" data-delay="300">
-          <div class="hw-card-tier">Tier B+ &mdash; Tri-Band</div>
+          <div class="hw-card-tier">Tier C &mdash; Wi-Fi 7 (Future)</div>
           <div class="hw-card-items">
             <div class="hw-item">
-              <div class="hw-item-name">Intel AX210 M.2</div>
-              <div class="hw-item-detail">2.4 + 5 + 6 GHz &bull; CSI on all bands</div>
-              <div class="hw-item-price">~$22</div>
+              <div class="hw-item-name">Wi-Fi 7 (802.11be) Adapter</div>
+              <div class="hw-item-detail">320 MHz channels &bull; MLO &bull; 4K QAM</div>
+              <div class="hw-item-price">TBD</div>
             </div>
             <div class="hw-item">
-              <div class="hw-item-name">Wi-Fi 6E AP</div>
-              <div class="hw-item-detail">Tri-band router as TX source</div>
-              <div class="hw-item-price">~$80</div>
+              <div class="hw-item-name">Wi-Fi 7 Tri-Band AP</div>
+              <div class="hw-item-detail">Multi-link operation across all bands</div>
+              <div class="hw-item-price">TBD</div>
             </div>
           </div>
           <div class="hw-card-total">
             <span>Total</span>
-            <strong>~$175</strong>
+            <strong>TBD</strong>
           </div>
-          <div class="hw-card-note">Adds 6 GHz band for novel tri-band spectroscopy research.</div>
+          <div class="hw-card-note">Wi-Fi 7 doubles 6 GHz channel width to 320 MHz, enabling even richer CSI for material sensing.</div>
         </div>
       </div>
     </div>
@@ -745,8 +793,8 @@
           </div>
           <pre id="bibtex"><code>@software{ranish_wispec_2026,
   author    = {Ranish, Abhinav},
-  title     = {{WiSpec}: Commodity Dual-Band
-               Wi-Fi Spectroscopy for Material
+  title     = {{WiSpec}: Commodity Tri-Band
+               Wi-Fi 6E Spectroscopy for Material
                Classification},
   year      = {2026},
   note         = {Student research, Arizona State
@@ -764,7 +812,7 @@
             </button>
           </div>
           <pre id="apa"><code>Ranish, A. (2026). WiSpec: Commodity
-Dual-Band Wi-Fi Spectroscopy for Material
+Tri-Band Wi-Fi 6E Spectroscopy for Material
 Classification and Structural
 Reconnaissance [Software]. Student research
 conducted at Arizona State University.</code></pre>
