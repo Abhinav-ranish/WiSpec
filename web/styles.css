@@ -1490,6 +1490,24 @@ tr:hover td {
   color: var(--cyan);
 }
 
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 20px;
+  margin: 12px 0;
+}
+
+.footer-nav a {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+
+.footer-nav a:hover {
+  color: var(--cyan);
+}
+
 /* ── Animations ── */
 @keyframes fadeInUp {
   from {

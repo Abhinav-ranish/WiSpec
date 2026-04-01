@@ -3,10 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WiSpec — Commodity Tri-Band Wi-Fi Spectroscopy</title>
-  <meta name="description" content="WiSpec uses commodity tri-band Wi-Fi 6E hardware (2.4, 5, and 6 GHz) to classify building materials through frequency-differential attenuation.">
+  <title>WiSpec — Wi-Fi 6E Material Classification Using Tri-Band Spectroscopy</title>
+  <meta name="description" content="WiSpec classifies building materials (concrete, wood, glass, metal, brick, drywall) using commodity Wi-Fi 6E hardware across 2.4, 5, and 6 GHz bands. Open research by Abhinav Ranish at ASU.">
   <meta name="author" content="Abhinav Ranish">
   <meta name="theme-color" content="#06080d">
+  <meta name="keywords" content="Wi-Fi sensing, Wi-Fi 6E, material classification, CSI, RSSI, tri-band spectroscopy, building materials, wireless sensing, WiSpec, commodity hardware">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://wispec.aranish.uk/">
 
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -14,24 +19,91 @@
   <!-- OpenGraph -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://wispec.aranish.uk/">
-  <meta property="og:title" content="WiSpec — Commodity Tri-Band Wi-Fi Spectroscopy">
-  <meta property="og:description" content="Classify building materials using off-the-shelf Wi-Fi 6E hardware. Tri-band frequency-differential attenuation across 2.4, 5, and 6 GHz bands.">
+  <meta property="og:title" content="WiSpec — Wi-Fi 6E Tri-Band Material Classification">
+  <meta property="og:description" content="Classify building materials using off-the-shelf Wi-Fi 6E hardware. Tri-band frequency-differential attenuation across 2.4, 5, and 6 GHz bands with 91% accuracy.">
   <meta property="og:image" content="https://wispec.aranish.uk/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="WiSpec — Tri-band Wi-Fi 6E spectroscopy for material classification">
+  <meta property="og:site_name" content="WiSpec">
+  <meta property="og:locale" content="en_US">
 
   <!-- Twitter Card -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="WiSpec — Commodity Tri-Band Wi-Fi Spectroscopy">
-  <meta name="twitter:description" content="Classify building materials using off-the-shelf Wi-Fi 6E hardware. Tri-band frequency-differential attenuation across 2.4, 5, and 6 GHz.">
+  <meta name="twitter:title" content="WiSpec — Wi-Fi 6E Tri-Band Material Classification">
+  <meta name="twitter:description" content="Classify building materials using off-the-shelf Wi-Fi 6E hardware. Tri-band frequency-differential attenuation across 2.4, 5, and 6 GHz bands with 91% accuracy.">
   <meta name="twitter:image" content="https://wispec.aranish.uk/og-image.png">
+  <meta name="twitter:image:alt" content="WiSpec — Tri-band Wi-Fi 6E spectroscopy for material classification">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Outfit:wght@300;400;500;600&family=Source+Code+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="styles.css">
+
+  <!-- Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://wispec.aranish.uk/#website",
+        "url": "https://wispec.aranish.uk/",
+        "name": "WiSpec",
+        "description": "Commodity Tri-Band Wi-Fi 6E Spectroscopy for Material Classification",
+        "publisher": { "@id": "https://wispec.aranish.uk/#person" }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://wispec.aranish.uk/#webpage",
+        "url": "https://wispec.aranish.uk/",
+        "name": "WiSpec — Wi-Fi 6E Material Classification Using Tri-Band Spectroscopy",
+        "description": "WiSpec classifies building materials (concrete, wood, glass, metal, brick, drywall) using commodity Wi-Fi 6E hardware across 2.4, 5, and 6 GHz bands.",
+        "isPartOf": { "@id": "https://wispec.aranish.uk/#website" },
+        "about": { "@id": "https://wispec.aranish.uk/#software" },
+        "author": { "@id": "https://wispec.aranish.uk/#person" }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://wispec.aranish.uk/#person",
+        "name": "Abhinav Ranish",
+        "url": "https://wispec.aranish.uk/",
+        "affiliation": {
+          "@type": "CollegeOrUniversity",
+          "name": "Arizona State University"
+        },
+        "sameAs": [
+          "https://github.com/abhinav-ranish"
+        ]
+      },
+      {
+        "@type": "SoftwareSourceCode",
+        "@id": "https://wispec.aranish.uk/#software",
+        "name": "WiSpec",
+        "description": "Commodity tri-band Wi-Fi 6E spectroscopy system for classifying building materials through frequency-differential attenuation across 2.4, 5, and 6 GHz bands.",
+        "author": { "@id": "https://wispec.aranish.uk/#person" },
+        "programmingLanguage": "Python",
+        "codeRepository": "https://github.com/abhinav-ranish/wispec",
+        "applicationCategory": "Scientific Research",
+        "keywords": ["Wi-Fi sensing", "material classification", "Wi-Fi 6E", "CSI", "RSSI", "tri-band spectroscopy"]
+      },
+      {
+        "@type": "ScholarlyArticle",
+        "@id": "https://wispec.aranish.uk/#article",
+        "headline": "WiSpec: Commodity Tri-Band Wi-Fi 6E Spectroscopy for Material Classification",
+        "author": { "@id": "https://wispec.aranish.uk/#person" },
+        "datePublished": "2026",
+        "description": "Ablation study comparing single-band, dual-band, and tri-band Wi-Fi configurations for building material classification using frequency-differential attenuation.",
+        "about": ["Wi-Fi sensing", "material classification", "Wi-Fi 6E", "machine learning"],
+        "sourceOrganization": {
+          "@type": "CollegeOrUniversity",
+          "name": "Arizona State University"
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <!-- Scan line overlay -->
@@ -58,7 +130,7 @@
         <a href="#applications">Applications</a>
         <a href="#hardware">Hardware</a>
         <a href="#cite">Cite</a>
-        <a href="https://github.com" class="nav-btn" target="_blank" rel="noopener">
+        <a href="https://github.com/abhinav-ranish/wispec" class="nav-btn" target="_blank" rel="noopener">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
           GitHub
         </a>
@@ -69,6 +141,7 @@
     </div>
   </nav>
 
+  <main>
   <!-- Hero -->
   <section class="hero" id="hero">
     <canvas id="heroCanvas" class="hero-canvas"></canvas>
@@ -799,7 +872,7 @@
   year      = {2026},
   note         = {Student research, Arizona State
                University},
-  url       = {https://github.com/aranish/wispec}
+  url       = {https://github.com/abhinav-ranish/wispec}
 }</code></pre>
         </div>
 
@@ -831,6 +904,8 @@ conducted at Arizona State University.</code></pre>
     </div>
   </section>
 
+  </main>
+
   <!-- Footer -->
   <footer class="footer">
     <div class="container">
@@ -846,9 +921,19 @@ conducted at Arizona State University.</code></pre>
           <span>WiSpec</span>
         </div>
         <p class="footer-copy">Abhinav Ranish &bull; Student @ Arizona State University &bull; 2026</p>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <a href="#overview">Project Overview</a>
+          <a href="#science">How WiSpec Works</a>
+          <a href="#materials">Material Signatures</a>
+          <a href="#results">Research Results</a>
+          <a href="#applications">Applications</a>
+          <a href="#hardware">Hardware Requirements</a>
+          <a href="#pipeline">Analysis Pipeline</a>
+          <a href="#cite">Cite This Work</a>
+        </nav>
         <div class="footer-links">
-          <a href="mailto:chatgpt@asu.edu">Contact</a>
-          <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+          <a href="mailto:chatgpt@asu.edu">Contact Abhinav Ranish</a>
+          <a href="https://github.com/abhinav-ranish/wispec" target="_blank" rel="noopener">WiSpec on GitHub</a>
         </div>
       </div>
     </div>
