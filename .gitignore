@@ -3,5 +3,5 @@ __pycache__/
 *.pyc
 .pytest_cache/
 *.egg-info/
-data/
-runs/
+/data/
+/runs/
