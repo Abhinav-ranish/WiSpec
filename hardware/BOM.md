@@ -47,11 +47,32 @@ classification) keep working on the same hardware.
 | 4 | **Tri-band Wi-Fi 6E/7 router with OpenWrt support** | 1 | Transmitter. Must allow pinning channels, 160 MHz on 5 and 6 GHz, fixed TX power, and disabling band steering / MLO / auto-channel / DFS hopping | ~$200–350 |
 | 5 | **Traffic node**: any small Linux PC with 3 Wi-Fi 6E clients (3× AX210 again is simplest) — one client associated per band, generating traffic so the AP transmits at a steady 200–500 frames/s per band | 1 PC + 3 AX210 kits | Packet-rate control | ~$300–500 (used SFF PC) + ~$120 |
 | 6 | **Orbbec Femto Bolt** (ToF depth + RGB, 120° FOV, Azure Kinect-compatible; body tracking via the Kinect Body Tracking SDK wrapper) | 1 | Teacher: depth frames, room point cloud, 3D skeleton joints | ~$350–420 |
-| 7 | **Receiver / training host**: x86 desktop running the Ubuntu LTS release PicoScenes currently supports; ≥3 free PCIe slots (x1 is fine); 64 GB RAM; 4 TB NVMe; NVIDIA RTX 4090/5090-class GPU (24–32 GB) | 1 | Capture (3 NICs + camera on one clock), body tracking, training | reuse existing, or ~$2.5–3.5k new |
+| 7 | **Capture host**: x86 desktop running the Ubuntu LTS release PicoScenes currently supports; ≥4 free PCIe slots (x1 is fine, leaves room for the 4th-band upgrade); 32 GB RAM; 4 TB NVMe; **no GPU needed** — training runs on AWS (see `cloud/aws/README.md`) | 1 | Capture (NICs + camera on one clock), CPU body tracking | reuse existing, or ~$700–1,000 new |
 | 8 | Voice front-end: a Home Assistant Assist satellite (e.g. HA Voice Preview Edition) or a USB mic array | 1 | "Play that" / "turn that on" commands | ~$60 |
 
-**Phase 1 total:** ~$1.3–1.8k if you reuse a GPU workstation, ~$4–5k with
-a new one.
+**Phase 1 total:** ~$1.3–1.8k reusing a desktop, ~$2–2.8k with a new one.
+Training runs on SageMaker spot instances paid from AWS credits instead of a
+$2.5k+ local GPU.
+
+## Phase 1b — Optional 4th band: top of 6 GHz (~7 GHz)
+
+The 6 GHz Wi-Fi band runs up to 7.125 GHz. The base rig captures only its
+bottom (ch 15, centre 6025 MHz). Adding a capture at the top (ch 207,
+6905–7065 MHz, centre 6985 MHz) spreads the measurements ~1 GHz further
+across frequency, which is most of what a future "7 GHz" band would add,
+and it's legal today. Config: `configs/rig_quad_band.json`.
+
+| Item | Qty | Purpose | Approx. cost |
+|------|-----|---------|-------------:|
+| Intel AX210 PCIe kit + 2 tri-band antennas (RX host, 4th slot) | 1 | Receives ch 207 | ~$55–60 |
+| Second Wi-Fi 6E/7 AP that can be pinned to 6 GHz ch 207 at 160 MHz (a tri-band router has only one 6 GHz radio, so it can't serve two 6 GHz channels at once) | 1 | Transmits on ch 207 | ~$120–250 |
+| AX210 kit for the traffic node | 1 | Keeps the ch 207 AP busy | ~$40 |
+
+Do this **after** the 3-band rig works. Then use the per-band ablation in
+`python -m wispec.train eval` to measure whether `6g_hi` adds information
+beyond `6g`. If it doesn't, drop it. The genuinely new 7.125+ GHz spectrum is
+not open for Wi-Fi yet (the lower-7 GHz band is still at the proposal stage),
+so there is nothing to buy for it.
 
 ### Why not cheaper or newer parts
 

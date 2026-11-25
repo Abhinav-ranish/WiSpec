@@ -23,7 +23,10 @@ extra sensors: point at the TV and say "play that". See
 [docs/VISION.md](docs/VISION.md) for the architecture, milestones and honest
 limitations, and [hardware/BOM.md](hardware/BOM.md) for the recommended rig
 (3x Intel AX210 for concurrent 2.4/5/6 GHz capture, tri-band AP, Orbbec
-Femto Bolt depth camera as the training teacher).
+Femto Bolt depth camera as the training teacher). An optional 4th band at the
+top of 6 GHz (~7 GHz) is in `configs/rig_quad_band.json`. Training runs on AWS
+SageMaker spot instances, launched by hand or by agents via GitHub Actions; see
+[cloud/aws/README.md](cloud/aws/README.md).
 
 The approach follows camera-supervised Wi-Fi imaging (WiFiCam, Strohmayer et
 al., ICIP 2024): a depth camera labels training data, a frame autoencoder

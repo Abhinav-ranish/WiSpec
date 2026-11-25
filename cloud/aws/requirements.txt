@@ -1,0 +1,3 @@
+# Launcher-side only (your machine or GitHub Actions). The job itself runs in the AWS PyTorch DLC.
+sagemaker>=2.220,<3
+boto3

@@ -1,0 +1,78 @@
+name: SageMaker training
+
+# Manually (or by an agent via the GitHub API) start a training job on SageMaker.
+# Auth uses GitHub OIDC -> an AWS IAM role; no long-lived AWS keys are stored.
+# Setup: cloud/aws/README.md
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "synthetic | data"
+        default: synthetic
+      config:
+        description: "rig config"
+        default: configs/rig_tri_band.json
+      data_s3:
+        description: "S3 URI of recorded sessions (mode=data)"
+        default: ""
+      instance_type:
+        default: ml.g4dn.xlarge
+      stage1_epochs:
+        default: "30"
+      stage2_epochs:
+        default: "40"
+      tag:
+        description: "checkpoint group; reuse to resume"
+        default: ci
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION || 'us-east-1' }}
+      - run: pip install -r cloud/aws/requirements.txt
+      - name: Run job
+        env:
+          WISPEC_SM_ROLE: ${{ secrets.WISPEC_SM_ROLE }}
+          WISPEC_S3_BUCKET: ${{ secrets.WISPEC_S3_BUCKET }}
+          MODE: ${{ inputs.mode }}
+          CONFIG: ${{ inputs.config }}
+          DATA_S3: ${{ inputs.data_s3 }}
+          INSTANCE: ${{ inputs.instance_type }}
+          E1: ${{ inputs.stage1_epochs }}
+          E2: ${{ inputs.stage2_epochs }}
+          TAG: ${{ inputs.tag }}
+        run: |
+          args=(run --mode "$MODE" --config "$CONFIG" --instance-type "$INSTANCE" \
+                --stage1-epochs "$E1" --stage2-epochs "$E2" --tag "$TAG" --wait --out run_out)
+          if [ -n "$DATA_S3" ]; then args+=(--data-s3 "$DATA_S3"); fi
+          python cloud/aws/launch_sagemaker.py "${args[@]}" | tee launch.log
+      - name: Summary
+        if: always()
+        run: |
+          echo '### WiSpec SageMaker result' >> "$GITHUB_STEP_SUMMARY"
+          echo '```json' >> "$GITHUB_STEP_SUMMARY"
+          (cat run_out/eval.json 2>/dev/null || grep WISPEC_JOB launch.log || echo '{}') >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wispec-eval
+          path: |
+            run_out/eval.json
+            run_out/examples.npz
+            launch.log
+          if-no-files-found: ignore

@@ -45,3 +45,13 @@ def test_build_windows_on_synthetic(tmp_path):
     assert np.all(w.band_valid[:, 1] == 0) and np.all(w.band_valid[:, 0] > 0.5)
     assert w.frames.shape == (n, 1, 32, 32) and w.frames.max() <= 1
     assert w.joints.shape == (n, 9, 3)
+
+
+def test_quad_band_config_loads():
+    from pathlib import Path
+    cfg = RigConfig.from_json(Path(__file__).parent.parent / "configs" / "rig_quad_band.json")
+    assert [b.name for b in cfg.bands] == ["2g", "5g", "6g", "6g_hi"]
+    hi = cfg.bands[-1]
+    # ch 207 (last full 160 MHz US channel) must end at or below the top of UNII-8 (7125 MHz)
+    assert hi.center_mhz + hi.bandwidth_mhz / 2 <= 7125
+    assert hi.primary_mhz == hi.center_mhz - 70
