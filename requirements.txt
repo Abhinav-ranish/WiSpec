@@ -1,0 +1,16 @@
+# Tier A/B analysis
+numpy
+pandas
+scipy
+scikit-learn
+matplotlib
+seaborn
+xgboost
+csiread
+# Tier C (room mapping / pointing)
+torch>=2.2
+pytest
+# Capture host only (install on the rig):
+#   pyorbbecsdk     - Orbbec Femto Bolt teacher camera
+#   opencv-python   - webcam teacher fallback
+#   PicoScenes + PicoScenes Python Toolbox - see https://ps.zpj.io/

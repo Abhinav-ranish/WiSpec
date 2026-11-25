@@ -14,9 +14,42 @@ WiSpec enables several practical applications across different domains:
 - **Search and Rescue:** Rapid structural assessment to identify building composition, floor materials, and potential hazards during emergency operations
 - **Smart Building Automation:** Material-aware building systems that adapt HVAC, lighting, and comfort systems based on wall and floor composition
 
+### Tier C: Room Mapping & Point-and-Say Automation (new)
+
+WiSpec is growing from material classification into a room-scale sensor:
+**where people are, what pose they're in, and what they're pointing at**,
+using only the home's Wi-Fi at runtime. The goal is home automation without
+extra sensors: point at the TV and say "play that". See
+[docs/VISION.md](docs/VISION.md) for the architecture, milestones and honest
+limitations, and [hardware/BOM.md](hardware/BOM.md) for the recommended rig
+(3x Intel AX210 for concurrent 2.4/5/6 GHz capture, tri-band AP, Orbbec
+Femto Bolt depth camera as the training teacher).
+
+The approach follows camera-supervised Wi-Fi imaging (WiFiCam, Strohmayer et
+al., ICIP 2024): a depth camera labels training data, a frame autoencoder
+compresses each frame to 32 numbers, and a tri-band 1D-CNN learns to predict
+those numbers, 3D body joints and presence from 1.5 s of CSI. The camera is
+not used at inference.
+
+```bash
+pip install -e ".[train,dev]"
+python -m pytest                          # unit + end-to-end smoke tests
+# Full pipeline on synthetic data (no hardware needed):
+python -m wispec.train synth  --out data/synth --sessions 8 --seconds 150
+python -m wispec.train stage1 --data data/synth --run runs/synth
+python -m wispec.train stage2 --data data/synth --run runs/synth
+python -m wispec.train eval   --data data/synth --run runs/synth --room configs/room_example.json
+# On the rig:
+python -m wispec.capture.session --out data/sessions/walk_01 --duration 600 --activity walking --convert
+```
+
 ## Quick Start
 
 ### Your Hardware
+
+> For Tier C (room mapping / pointing), use the multi-NIC rig in
+> [hardware/BOM.md](hardware/BOM.md) instead of a single adapter.
+
 | Device | Chipset | Bands | CSI? | Role |
 |--------|---------|-------|------|------|
 | Wi-Fi 6E Tri-Band AP | Any 6E router | 2.4 + 5 + 6 GHz | No | Tier A TX (tri-band beacons) |
@@ -52,6 +85,17 @@ wifi_sensing_research/
 │       ├── classify_materials.py          # ML classifiers + ablation
 │       ├── visualize_results.py           # Publication figures
 │       └── statistical_tests.py           # Rigorous stats
+├── wispec/                               # Tier C package (room mapping / pointing)
+│   ├── capture/                           # multi-NIC PicoScenes + teacher camera recording
+│   ├── data/                              # CSI cleaning, windowing, synthetic sessions
+│   ├── models/                            # frame autoencoder + tri-band CSINet
+│   ├── room/                              # room map, pointing rays, target resolution
+│   ├── automation/                        # intents -> Home Assistant service calls
+│   └── train.py                           # train / eval CLI (baseline + band ablation)
+├── configs/                               # rig + room map configs
+├── hardware/BOM.md                        # recommended hardware
+├── docs/VISION.md                         # architecture + milestones
+├── tests/                                 # pytest suite
 ├── paper/
 │   ├── main.tex                           # IEEE workshop paper draft
 │   └── references.bib                     # 20+ BibTeX entries
