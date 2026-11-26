@@ -1,9 +1,19 @@
 # WiSpec — Commodity Tri-Band Wi-Fi 6E Spectroscopy for Material Classification and Structural Reconnaissance
 
 **Author:** Abhinav Ranish — Arizona State University
-**Status:** Active research project
+**Status:** Active research project — seeking $4,000 in hardware sponsorship
 
-## Open to Collaborators
+## Looking for Sponsors — $4,000
+
+WiSpec is looking for **$4,000 in sponsorship** to build the full tri-band
+capture rig: a capture tower PC, storage, Intel AX210 receivers, 6 GHz
+antennas, a Wi-Fi 7 router, a depth camera for training labels, and traffic
+clients. Model training is already covered by AWS credits. The itemized
+budget is in [hardware/BOM.md](hardware/BOM.md#sponsorship-budget--4000).
+
+Sponsors will be acknowledged in the repository and in resulting publications. To sponsor or donate hardware, reach out: chatgpt@asu.edu
+
+### Open to Collaborators
 
 This is an active research project and we're looking for collaborators — whether you're into wireless systems, signal processing, machine learning, or just curious about RF sensing. If you want to contribute or discuss ideas, reach out: chatgpt@asu.edu
 

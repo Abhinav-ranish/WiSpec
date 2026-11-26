@@ -37,22 +37,82 @@ classification) keep working on the same hardware.
    dollars and PicoScenes support for it is unverified. Only consider it if
    the AX210 rig demonstrably hits a resolution ceiling.
 
-## Phase 1 — Core rig
+## What we already have
 
-| # | Item | Qty | Purpose | Approx. cost |
-|---|------|-----|---------|-------------:|
-| 1 | **Intel AX210** on a desktop PCIe x1 adapter card (M.2 E-key → PCIe, with MHF4 pigtails) — buy genuine Intel AX210 (not AX211, which is CNVio and Intel-platform-only) | 3 | Receiver: one card per band (2.4/40, 5/160, 6/160) | $35–45 ea → ~$120 |
-| 2 | **6 GHz-rated tri-band antennas** (2.4/5/6–7.1 GHz, RP-SMA) — the antennas bundled with most adapter kits are not rated for 6 GHz | 6 (2 per card) | RX antennas | ~$80–120 |
-| 3 | Rigid antenna bracket / rail + tripod | 1 | Fixed, measured antenna geometry (keep it identical across all sessions) | ~$60–100 |
-| 4 | **Tri-band Wi-Fi 6E/7 router with OpenWrt support** | 1 | Transmitter. Must allow pinning channels, 160 MHz on 5 and 6 GHz, fixed TX power, and disabling band steering / MLO / auto-channel / DFS hopping | ~$200–350 |
-| 5 | **Traffic node**: any small Linux PC with 3 Wi-Fi 6E clients (3× AX210 again is simplest) — one client associated per band, generating traffic so the AP transmits at a steady 200–500 frames/s per band | 1 PC + 3 AX210 kits | Packet-rate control | ~$300–500 (used SFF PC) + ~$120 |
-| 6 | **Orbbec Femto Bolt** (ToF depth + RGB, 120° FOV, Azure Kinect-compatible; body tracking via the Kinect Body Tracking SDK wrapper) | 1 | Teacher: depth frames, room point cloud, 3D skeleton joints | ~$350–420 |
-| 7 | **Capture host**: x86 desktop running the Ubuntu LTS release PicoScenes currently supports; ≥4 free PCIe slots (x1 is fine, leaves room for the 4th-band upgrade); 32 GB RAM; 4 TB NVMe; **no GPU needed** — training runs on AWS (see `cloud/aws/README.md`) | 1 | Capture (NICs + camera on one clock), CPU body tracking | reuse existing, or ~$700–1,000 new |
-| 8 | Voice front-end: a Home Assistant Assist satellite (e.g. HA Voice Preview Edition) or a USB mic array | 1 | "Play that" / "turn that on" commands | ~$60 |
+| Item | Role |
+|------|------|
+| Dell Precision 3551 laptop (i7-10875H, 8C/16T, 32 GB RAM, Ubuntu) | Dev machine; single-band pilot with one AX210 swapped into its Wi-Fi slot; also a traffic client. It has no PCIe slots, so it can't be the capture box. Its 4 GB Quadro P620 is too small for training. |
+| AWS credits, with SageMaker GPU spot quota approved | All model training (`cloud/aws/README.md`) |
 
-**Phase 1 total:** ~$1.3–1.8k reusing a desktop, ~$2–2.8k with a new one.
-Training runs on SageMaker spot instances paid from AWS credits instead of a
-$2.5k+ local GPU.
+## Sponsorship budget — $4,000
+
+This is everything still needed for the full rig, including the optional 4th
+band. Prices allow for late-2026 SSD and RAM pricing, which is well above
+historical levels.
+
+| # | Item | Qty | Why | Budget |
+|---|------|-----|-----|-------:|
+| 1 | **Capture tower PC**: recent Intel/AMD desktop in a full tower (not SFF), **≥4 PCIe slots**, 32 GB RAM, USB 3.x, runs the Ubuntu LTS release PicoScenes supports. No GPU needed. | 1 | Holds all receiver cards plus the camera on one clock; stays fixed in the room | $1,200 |
+| 2 | **Storage**: 4 TB NVMe SSD (capture) + 8 TB HDD (archive/backup) | 1 + 1 | Raw CSI is ~40–70 GB per recorded hour | $500 |
+| 3 | **Intel AX210** cards: 4 on PCIe x1 adapter boards (2.4 / 5 / 6 / top-6 GHz) + 1 bare M.2 card for the laptop pilot. Genuine AX210, not AX211. | 5 | CSI receivers, one per band | $200 |
+| 4 | **6 GHz-rated tri-band antennas** (2.4/5/6–7.1 GHz, RP-SMA) + MHF4 pigtails + rigid bracket and tripods | 8 + mounts | Fixed, measured antenna geometry across every session | $250 |
+| 5 | **Tri-band Wi-Fi 7 router with OpenWrt support**: pinnable channels, 160 MHz on 5/6 GHz, fixed TX power, MLO/band steering off | 1 | Transmitter | $350 |
+| 6 | **Second Wi-Fi 6E/7 AP** that can be pinned to 6 GHz ch 207 | 1 | Transmitter for the top-of-6-GHz band (one AP radio serves only one 6 GHz channel) | $200 |
+| 7 | **Orbbec Femto Bolt** depth camera | 1 | Training labels: depth frames, room scan, 3D body joints | $420 |
+| 8 | **2× Raspberry Pi 5** kits (PSU, case, microSD) | 2 | Traffic clients that keep each band at a steady 200–500 frames/s | $200 |
+| 9 | Home Assistant voice satellite | 1 | "Play that" / "turn that on" | $60 |
+| 10 | Cables, PoE/power, UPS, spare parts, shipping and tax (~15%) | — | Contingency | $620 |
+| | **Total** | | | **$4,000** |
+
+Not in the ask: model training runs on AWS SageMaker credits, and software
+is open source or free for research.
+
+## Requirements summary
+
+**Hardware**
+- Capture host: x86 desktop with ≥4 PCIe slots (x1 is enough), 32 GB RAM,
+  ≥4 TB fast storage, USB 3 for the depth camera. No GPU.
+- One Intel AX210 per captured band (3 for tri-band, 4 with the top-6-GHz band).
+- Antennas rated for 6–7.1 GHz, mounted rigidly; the geometry must not change
+  between sessions.
+- Tri-band OpenWrt router (+ a second 6 GHz AP for the 4th band).
+- One traffic client per band (laptop, Raspberry Pis, or spare devices).
+- Orbbec Femto Bolt depth camera, mounted to see the whole room, with its pose
+  measured relative to the antenna bracket.
+
+**Software / accounts**
+- Ubuntu LTS (the release PicoScenes currently supports) on the capture host.
+- PicoScenes and the PicoScenes Python Toolbox (free for research use).
+- Orbbec SDK (`pyorbbecsdk`). Body tracking via the Azure Kinect Body
+  Tracking SDK if it installs; otherwise an RGB-D pose model run on SageMaker.
+- AWS account: SageMaker GPU spot quota (done), S3 bucket, execution role,
+  GitHub OIDC role (`cloud/aws/README.md`).
+- Home Assistant instance for the automation demo.
+
+**Room setup**
+- Router channels pinned to match `configs/rig_tri_band.json` /
+  `configs/rig_quad_band.json`.
+- Consent from anyone recorded; sessions varied (walking, sitting, pointing,
+  empty room, different times of day).
+
+## Phase 1 — Core rig (detail)
+
+| # | Item | Qty | Purpose |
+|---|------|-----|---------|
+| 1 | Intel AX210 on a PCIe x1 adapter card (M.2 E-key → PCIe, MHF4 pigtails) | 3 | Receiver: one card per band (2.4/40, 5/160, 6/160) |
+| 2 | 6 GHz-rated tri-band antennas. The antennas bundled with most adapter kits are not rated for 6 GHz. | 6 | RX antennas |
+| 3 | Rigid antenna bracket / rail + tripod | 1 | Fixed, measured antenna geometry |
+| 4 | Tri-band Wi-Fi 6E/7 router with OpenWrt support | 1 | Transmitter |
+| 5 | Traffic clients, one associated per band | 3 | Steady packet rate |
+| 6 | Orbbec Femto Bolt | 1 | Teacher |
+| 7 | Capture tower PC | 1 | Capture on one clock, CPU body tracking |
+| 8 | Voice front-end (Home Assistant satellite) | 1 | Commands |
+
+**Buy in this order:**
+1. One bare AX210 for the laptop (~$20). Confirm PicoScenes captures CSI.
+2. Tower PC, storage, 3 AX210 kits, antennas, router, traffic clients.
+3. Femto Bolt once capture works.
+4. The 4th-band upgrade (AX210 + second AP) once the 3-band models work.
 
 ## Phase 1b — Optional 4th band: top of 6 GHz (~7 GHz)
 
