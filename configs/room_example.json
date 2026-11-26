@@ -1,0 +1,11 @@
+{
+  "_comment": "Room map: coordinates in metres in the rig frame (origin at the RX antenna bracket, z up). Positions come from the calibration scan.",
+  "name": "living_room",
+  "size_m": [5.0, 4.0, 2.6],
+  "anchors": [
+    {"name": "tv",      "entity_id": "media_player.living_room_tv", "position": [4.8, 2.0, 1.1], "radius_m": 0.6, "aliases": ["tv", "television"]},
+    {"name": "speaker", "entity_id": "media_player.sonos",          "position": [4.6, 0.4, 0.9], "radius_m": 0.2, "aliases": ["speaker", "music"]},
+    {"name": "lamp",    "entity_id": "light.floor_lamp",            "position": [0.3, 3.7, 1.5], "radius_m": 0.3, "aliases": ["lamp", "light"]},
+    {"name": "vacuum",  "entity_id": "vacuum.roborock",             "position": [0.5, 0.3, 0.1], "radius_m": 0.3, "aliases": ["vacuum", "robot"]}
+  ]
+}

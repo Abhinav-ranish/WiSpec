@@ -1,0 +1,16 @@
+{
+  "_comment": "Tier C tri-band rig. phy ids come from PicoScenes `array_status`. primary/center follow PicoScenes' '<primary> <cbw> <center>' channel spec. Verify against your router's pinned channels.",
+  "bands": [
+    {"name": "2g", "phy": "3", "primary_mhz": 2412, "bandwidth_mhz": 40,  "center_mhz": 2422, "model_subcarriers": 64},
+    {"name": "5g", "phy": "4", "primary_mhz": 5180, "bandwidth_mhz": 160, "center_mhz": 5250, "model_subcarriers": 128},
+    {"name": "6g", "phy": "5", "primary_mhz": 5955, "bandwidth_mhz": 160, "center_mhz": 6025, "model_subcarriers": 128}
+  ],
+  "rx_antennas": 2,
+  "csi_rate_hz": 100,
+  "window_s": 1.5,
+  "teacher": "depth",
+  "teacher_device": "orbbec",
+  "frame_size": 64,
+  "latent_dim": 32,
+  "max_depth_mm": 6000
+}

@@ -1543,6 +1543,53 @@ tr:hover td {
 }
 
 /* ── Responsive ── */
+/* Sponsor */
+.sponsor-grid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.sponsor-points {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sponsor-points li {
+  position: relative;
+  padding-left: 20px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.sponsor-points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cyan);
+}
+
+.sponsor-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+@media (max-width: 1024px) {
+  .sponsor-grid { grid-template-columns: 1fr; max-width: 560px; margin: 0 auto; }
+  .sponsor-pitch { order: -1; }
+}
+
 @media (max-width: 1024px) {
   .overview-grid { grid-template-columns: repeat(2, 1fr); }
   .materials-grid { grid-template-columns: repeat(2, 1fr); }
