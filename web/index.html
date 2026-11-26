@@ -129,6 +129,7 @@
         <a href="#results">Results</a>
         <a href="#applications">Applications</a>
         <a href="#hardware">Hardware</a>
+        <a href="#sponsor">Sponsor</a>
         <a href="#cite">Cite</a>
         <a href="https://github.com/abhinav-ranish/wispec" class="nav-btn" target="_blank" rel="noopener">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
@@ -847,11 +848,100 @@
     </div>
   </section>
 
-  <!-- Cite -->
-  <section class="section section-dark" id="cite">
+  <!-- Sponsor -->
+  <section class="section section-dark" id="sponsor">
     <div class="container">
       <div class="section-header">
-        <span class="section-tag">08 / Citation</span>
+        <span class="section-tag">08 / Sponsor</span>
+        <h2 class="section-title">Looking for Sponsors</h2>
+        <p class="section-desc">WiSpec is seeking <strong>$4,000</strong> in sponsorship to build its full tri-band capture rig for room mapping and point-and-say home automation. Model training is already covered by AWS credits.</p>
+      </div>
+
+      <div class="sponsor-grid">
+        <div class="hw-card reveal" data-delay="0">
+          <div class="hw-card-tier">Rig budget</div>
+          <div class="hw-card-items">
+            <div class="hw-item">
+              <div class="hw-item-name">Capture tower PC</div>
+              <div class="hw-item-detail">&ge;4 PCIe slots &bull; 32 GB RAM &bull; holds every receiver card</div>
+              <div class="hw-item-price">$1,200</div>
+            </div>
+            <div class="hw-item">
+              <div class="hw-item-name">Storage</div>
+              <div class="hw-item-detail">4 TB NVMe SSD + 8 TB backup &bull; ~40&ndash;70 GB per recorded hour</div>
+              <div class="hw-item-price">$500</div>
+            </div>
+            <div class="hw-item">
+              <div class="hw-item-name">5&times; Intel AX210</div>
+              <div class="hw-item-detail">One CSI receiver per band (2.4 / 5 / 6 / top-6 GHz) + laptop pilot</div>
+              <div class="hw-item-price">$200</div>
+            </div>
+            <div class="hw-item">
+              <div class="hw-item-name">6 GHz antennas + mounts</div>
+              <div class="hw-item-detail">8 tri-band antennas &bull; rigid, measured geometry</div>
+              <div class="hw-item-price">$250</div>
+            </div>
+            <div class="hw-item">
+              <div class="hw-item-name">Wi-Fi 7 OpenWrt router</div>
+              <div class="hw-item-detail">Tri-band transmitter on pinned 160 MHz channels</div>
+              <div class="hw-item-price">$350</div>
+            </div>
+            <div class="hw-item">
+              <div class="hw-item-name">Second 6 GHz AP</div>
+              <div class="hw-item-detail">Transmitter for the top-of-band (~7 GHz) channel</div>
+              <div class="hw-item-price">$200</div>
+            </div>
+            <div class="hw-item">
+              <div class="hw-item-name">Orbbec Femto Bolt</div>
+              <div class="hw-item-detail">Depth camera &bull; training labels, room scan, 3D body joints</div>
+              <div class="hw-item-price">$420</div>
+            </div>
+            <div class="hw-item">
+              <div class="hw-item-name">2&times; Raspberry Pi 5</div>
+              <div class="hw-item-detail">Traffic clients keeping each band at a steady packet rate</div>
+              <div class="hw-item-price">$200</div>
+            </div>
+            <div class="hw-item">
+              <div class="hw-item-name">Voice satellite</div>
+              <div class="hw-item-detail">Home Assistant &ldquo;play that&rdquo; front-end</div>
+              <div class="hw-item-price">$60</div>
+            </div>
+            <div class="hw-item">
+              <div class="hw-item-name">Cables, spares, shipping &amp; tax</div>
+              <div class="hw-item-detail">~15% contingency</div>
+              <div class="hw-item-price">$620</div>
+            </div>
+          </div>
+          <div class="hw-card-total">
+            <span>Total</span>
+            <strong>$4,000</strong>
+          </div>
+        </div>
+
+        <div class="hw-card hw-card-recommended sponsor-pitch reveal" data-delay="150">
+          <div class="hw-card-badge">Sponsor</div>
+          <div class="hw-card-tier">What your support builds</div>
+          <ul class="sponsor-points">
+            <li>Concurrent 2.4 / 5 / 6 GHz CSI capture at up to 160 MHz, plus a top-of-band ~7 GHz channel</li>
+            <li>A depth-camera &ldquo;teacher&rdquo; so Wi-Fi models learn presence, pose and pointing</li>
+            <li>An open research dataset and published results on tri-band Wi-Fi sensing</li>
+            <li>Home automation without cameras or extra sensors at runtime</li>
+          </ul>
+          <p class="hw-card-note">Sponsors will be acknowledged in the repository and in resulting publications. Hardware donations are welcome too.</p>
+          <div class="sponsor-actions">
+            <a href="mailto:chatgpt@asu.edu?subject=WiSpec%20sponsorship" class="btn btn-primary">Sponsor WiSpec</a>
+            <a href="https://github.com/abhinav-ranish/wispec/blob/main/hardware/BOM.md" target="_blank" rel="noopener" class="btn btn-ghost">Full budget</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cite -->
+  <section class="section" id="cite">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">09 / Citation</span>
         <h2 class="section-title">Cite This Work</h2>
       </div>
 
@@ -929,6 +1019,7 @@ conducted at Arizona State University.</code></pre>
           <a href="#applications">Applications</a>
           <a href="#hardware">Hardware Requirements</a>
           <a href="#pipeline">Analysis Pipeline</a>
+          <a href="#sponsor">Sponsor WiSpec</a>
           <a href="#cite">Cite This Work</a>
         </nav>
         <div class="footer-links">
